@@ -3,15 +3,11 @@
 use Grachev\Enum\Enum;
 use Grachev\Enum\GenderEnum;
 
-class GenderEnumTest extends \Codeception\TestCase\Test
+/**
+ * @author Konstantin Grachev <ko@grachev.io>
+ */
+class GenderEnumTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var GenderEnum[]
-     */
-    protected $list;
-
-    protected $tester;
-
     public function testEnumStringArg()
     {
         self::assertEquals(1, (new GenderEnum('1'))->getId());
@@ -19,7 +15,7 @@ class GenderEnumTest extends \Codeception\TestCase\Test
 
     public function testEnumEmptyClass()
     {
-        self::setExpectedException('LogicException');
+        $this->setExpectedException('LogicException');
 
         $class = 'EmptyEnum';
         self::throwException(new $class(10));
@@ -52,15 +48,15 @@ class GenderEnumTest extends \Codeception\TestCase\Test
 
     public function testEnumToArray()
     {
-        self::assertEquals([GenderEnum::MALE => $this->list[GenderEnum::MALE]], $this->list[GenderEnum::MALE]->toArray());
+        self::assertEquals([GenderEnum::MALE => GenderEnum::male()], GenderEnum::male()->toArray());
     }
 
     public function testEnumGetList()
     {
-        $male = $this->list[GenderEnum::MALE];
-        $female = $this->list[GenderEnum::FEMALE];
-        $notKnown = $this->list[GenderEnum::UNKNOWN];
-        $notApplicable = $this->list[GenderEnum::UNAPPLICABLE];
+        $male = GenderEnum::male();
+        $female = GenderEnum::female();
+        $notKnown = GenderEnum::unknown();
+        $notApplicable = GenderEnum::unapplicable();
 
         self::assertEquals([
             $male->getId() => $male,
@@ -68,13 +64,6 @@ class GenderEnumTest extends \Codeception\TestCase\Test
             $notKnown->getId() => $notKnown,
             $notApplicable->getId() => $notApplicable,
         ], GenderEnum::getList());
-
-        $array = [];
-        foreach ($this->list as $enum) {
-            /* @var GenderEnum $enum */
-            $array = array_replace($array, $enum->toArray());
-        }
-        self::assertEquals($array, GenderEnum::getList());
 
         self::assertEquals([$male->getId() => $male], GenderEnum::getList([1]));
         self::assertEquals([$female->getId() => $female], GenderEnum::getList([0, 1, 9], true));

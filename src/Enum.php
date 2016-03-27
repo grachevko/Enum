@@ -45,7 +45,7 @@ abstract class Enum implements \Serializable
      */
     public function __construct($id)
     {
-        $this->setId($id);
+        $this->setId((int) $id);
     }
 
     /**
