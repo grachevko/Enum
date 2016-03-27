@@ -1,0 +1,21 @@
+{
+  "name": "grachev/enum",
+  "description": "Enum class.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Konstantin Grachev",
+      "email": "ko@grachev.io"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Grachev\\Enum\\": "src/"
+    },
+    "exclude-from-classmap": ["/tests/"]
+  }
+}
