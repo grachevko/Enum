@@ -1,12 +1,15 @@
 <?php
 
+namespace Grachevko\Enum\Tests;
+
 use Grachevko\Enum\Enum;
 use Grachevko\Enum\GenderEnum;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class GenderEnumTest extends PHPUnit_Framework_TestCase
+class GenderEnumTest extends TestCase
 {
     public function testEnumStringArg()
     {
@@ -15,9 +18,9 @@ class GenderEnumTest extends PHPUnit_Framework_TestCase
 
     public function testEnumEmptyClass()
     {
-        $this->setExpectedException('LogicException');
+        $this->expectException(\LogicException::class);
 
-        $class = 'EmptyEnum';
+        $class = EmptyEnum::class;
         self::throwException(new $class(10));
     }
 
@@ -83,7 +86,7 @@ class GenderEnumTest extends PHPUnit_Framework_TestCase
         self::assertEquals(new GenderEnum(GenderEnum::FEMALE), GenderEnum::female());
         self::assertEquals(new GenderEnum(GenderEnum::UNAPPLICABLE), GenderEnum::unapplicable());
 
-        self::setExpectedException('BadMethodCallException');
+        $this->expectException(\BadMethodCallException::class);
         self::throwException(GenderEnum::{'boom'}());
     }
 
@@ -92,10 +95,10 @@ class GenderEnumTest extends PHPUnit_Framework_TestCase
         self::assertEquals(true, GenderEnum::male()->isMale());
         self::assertEquals(false, GenderEnum::female()->isMale());
 
-        self::setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         self::throwException(GenderEnum::unapplicable()->{'isBoom'}());
 
-        self::setExpectedException('BadMethodCallException');
+        $this->expectException(\BadMethodCallException::class);
         self::throwException(GenderEnum::unapplicable()->{'boom'}());
     }
 
@@ -106,15 +109,6 @@ class GenderEnumTest extends PHPUnit_Framework_TestCase
         self::assertEquals('prefix.test.postfix', TestEnum::test()->getName());
 
         self::assertEquals('yo', TestEnum::named()->getName());
-    }
-
-    protected function _before()
-    {
-        $this->list = GenderEnum::getList();
-    }
-
-    protected function _after()
-    {
     }
 }
 
