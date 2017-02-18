@@ -46,6 +46,13 @@ final class EnumTest extends TestCase
 
         TestEnum::one()->getDescription();
     }
+
+    public function testAllMethod()
+    {
+        self::assertEquals([TestEnum::one(), TestEnum::two()], TestEnum::all());
+        self::assertEquals([TestEnum::one()], TestEnum::all([TestEnum::ONE]));
+        self::assertEquals([TestEnum::two()], TestEnum::all([TestEnum::TWO]), true);
+    }
 }
 
 /**

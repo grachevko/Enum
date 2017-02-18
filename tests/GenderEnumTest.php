@@ -45,24 +45,6 @@ class GenderEnumTest extends TestCase
         self::assertEquals([GenderEnum::MALE => GenderEnum::male()], GenderEnum::male()->toArray());
     }
 
-    public function testEnumGetList()
-    {
-        $male = GenderEnum::male();
-        $female = GenderEnum::female();
-        $notKnown = GenderEnum::unknown();
-        $notApplicable = GenderEnum::unapplicable();
-
-        self::assertEquals([
-            $male->getId() => $male,
-            $female->getId() => $female,
-            $notKnown->getId() => $notKnown,
-            $notApplicable->getId() => $notApplicable,
-        ], GenderEnum::getList());
-
-        self::assertEquals([$male->getId() => $male], GenderEnum::getList([1]));
-        self::assertEquals([$female->getId() => $female], GenderEnum::getList([0, 1, 9], true));
-    }
-
     public function testEnumCallStatic()
     {
         self::assertEquals(new GenderEnum(GenderEnum::UNKNOWN), GenderEnum::unknown());

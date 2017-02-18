@@ -89,7 +89,7 @@ abstract class Enum implements \Serializable
      *
      * @return array
      */
-    public static function getList(array $ids = [], $reverse = false): array
+    public static function all(array $ids = [], $reverse = false): array
     {
         $all = array_values(self::$reflections[static::class]->getConstants());
 
@@ -99,12 +99,9 @@ abstract class Enum implements \Serializable
             $ids = $reverse ? array_diff($all, $ids) : $ids;
         }
 
-        $list = [];
-        foreach ($ids as $id) {
-            $list[$id] = new static($id);
-        }
-
-        return $list;
+        return array_map(function (int $id) {
+            return new static($id);
+        }, $ids);
     }
 
     /**
