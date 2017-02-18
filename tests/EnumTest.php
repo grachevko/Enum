@@ -1,0 +1,78 @@
+<?php
+
+namespace Grachevko\Enum\Tests;
+
+use Grachevko\Enum\Enum;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @author Konstantin Grachev <me@grachevko.ru>
+ */
+final class EnumTest extends TestCase
+{
+    public function testEmptyEnum()
+    {
+        $this->expectException(\LogicException::class);
+
+        new EmptyEnum(1);
+    }
+
+    public function testInstantiation()
+    {
+        self::assertInstanceOf(Enum::class, TestEnum::one());
+    }
+
+    public function testIntegerValue()
+    {
+        $this->expectException(\LogicException::class);
+
+        new StringValueEnum(1);
+    }
+
+    public function testNameValue()
+    {
+        self::assertSame('yo', TestEnum::one()->getName());
+        self::assertSame('two', TestEnum::two()->getName());
+    }
+
+    public function testCustomPropertyValue()
+    {
+        self::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->getDescription());
+    }
+
+    public function testCustomUndefinedValue()
+    {
+        $this->expectException(\LogicException::class);
+
+        TestEnum::one()->getDescription();
+    }
+}
+
+/**
+ * @method static TestEnum one()
+ * @method static TestEnum two()
+ * @method string getDescription()
+ */
+class TestEnum extends Enum
+{
+    const ONE = 1;
+    const TWO = 2;
+
+    protected static $name = [
+        self::ONE => 'yo',
+    ];
+
+    protected static $description = [
+        self::TWO => 'This is a description for TestEnum::TWO',
+    ];
+}
+
+class EmptyEnum extends Enum
+{
+}
+
+class StringValueEnum extends Enum
+{
+    const ONE = 1;
+    const WRONG_VALUE = 'string';
+}

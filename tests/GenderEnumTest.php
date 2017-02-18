@@ -2,7 +2,6 @@
 
 namespace Grachevko\Enum\Tests;
 
-use Grachevko\Enum\Enum;
 use Grachevko\Enum\GenderEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -41,13 +40,6 @@ class GenderEnumTest extends TestCase
         self::assertSame('female', $female->getName());
     }
 
-    public function testEnumGetNames()
-    {
-        self::assertSame([0 => 'unknown', 1 => 'male', 2 => 'female', 9 => 'unapplicable'], GenderEnum::getNames());
-        self::assertSame([0 => 'unknown'], GenderEnum::getNames([1, 2, 9], true));
-        self::assertSame([1 => 'male'], GenderEnum::getNames([1]));
-    }
-
     public function testEnumToArray()
     {
         self::assertEquals([GenderEnum::MALE => GenderEnum::male()], GenderEnum::male()->toArray());
@@ -69,13 +61,6 @@ class GenderEnumTest extends TestCase
 
         self::assertEquals([$male->getId() => $male], GenderEnum::getList([1]));
         self::assertEquals([$female->getId() => $female], GenderEnum::getList([0, 1, 9], true));
-    }
-
-    public function testEnumGetAnyId()
-    {
-        for ($i = 0; $i < 20; ++$i) {
-            self::assertArrayHasKey(GenderEnum::getAnyId(), array_flip([0, 1, 2, 9]));
-        }
     }
 
     public function testEnumCallStatic()
@@ -100,36 +85,4 @@ class GenderEnumTest extends TestCase
         $this->expectException(\BadMethodCallException::class);
         self::throwException(GenderEnum::unapplicable()->{'boom'}());
     }
-
-    public function testEnumPrefixAndPostfix()
-    {
-        self::assertSame('male', GenderEnum::male()->getName());
-
-        self::assertSame('prefix.test.postfix', TestEnum::test()->getName());
-
-        self::assertSame('yo', TestEnum::named()->getName());
-    }
-}
-
-/**
- * @method static TestEnum test()
- * @method static TestEnum named()
- */
-class TestEnum extends Enum
-{
-    const TEST = 1;
-
-    const NAMED = 2;
-
-    protected static $names = [
-        self::NAMED => 'yo',
-    ];
-
-    protected static $prefix = 'prefix.';
-
-    protected static $postfix = '.postfix';
-}
-
-class EmptyEnum extends Enum
-{
 }

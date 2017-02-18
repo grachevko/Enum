@@ -8,93 +8,25 @@ namespace Grachevko\Enum;
 abstract class Enum implements \Serializable
 {
     /**
-     * @var array
-     */
-    protected static $names = [];
-
-    /**
-     * @var array
-     */
-    protected static $description = [];
-
-    /**
-     * @var string
-     */
-    protected static $prefix;
-
-    /**
-     * @var string
-     */
-    protected static $postfix;
-
-    /**
-     * @var array
-     */
-    private static $meta = [];
-
-    /**
      * @var int
      */
     private $id;
 
     /**
-     * @param int $id
-     *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * @var \ReflectionClass[]
      */
-    public function __construct($id)
-    {
-        $this->setId((int) $id);
-    }
-
-    /**
-     * @throws \LogicException
-     */
-    private static function initialize()
-    {
-        if (self::isInitialized()) {
-            return;
-        }
-
-        $class = static::class;
-        $constants = (new \ReflectionClass($class))->getConstants();
-
-        if (!$constants) {
-            throw new \LogicException(sprintf('Class %s must define Constants', get_called_class()));
-        }
-
-        foreach ($constants as $constant => $value) {
-            if (!array_key_exists($value, static::$names)) {
-                static::$names[$value] = static::$prefix.strtolower($constant).static::$postfix;
-            }
-        }
-
-        self::$meta[$class]['ids'] = array_keys(array_flip($constants));
-        self::$meta[$class]['constants'] = $constants;
-    }
-
-    /**
-     * @return bool
-     */
-    private static function isInitialized()
-    {
-        if (array_key_exists(static::class, self::$meta)) {
-            return true;
-        }
-
-        return false;
-    }
+    private static $reflections;
 
     /**
      * @param int $id
      *
      * @throws \InvalidArgumentException
-     * @throws \LogicException
      */
-    private function setId($id)
+    public function __construct(int $id)
     {
-        if (!self::hasId($id)) {
+        self::initialize();
+
+        if (!in_array($id, self::$reflections[static::class]->getConstants(), true)) {
             throw new \InvalidArgumentException(sprintf('Undefined enum "%s" of class "%s"', $id, get_called_class()));
         }
 
@@ -102,165 +34,69 @@ abstract class Enum implements \Serializable
     }
 
     /**
+     * @throws \LogicException
+     */
+    private static function initialize(): void
+    {
+        $class = static::class;
+
+        if (self::$reflections[$class]) {
+            return;
+        }
+
+        self::$reflections[$class] = $reflection = new \ReflectionClass($class);
+
+        $constants = $reflection->getConstants();
+        if (!$constants) {
+            throw new \LogicException(sprintf('Class %s must define Constants', get_called_class()));
+        }
+
+        foreach ($constants as $value) {
+            if (!is_int($value)) {
+                throw new \LogicException('All enum constants must be in integer type');
+            }
+        }
+    }
+
+    /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     *
-     * @throws \LogicException
-     *
-     * @return bool
-     */
-    public static function hasId($id)
-    {
-        return in_array($id, self::getIds(), true);
-    }
-
-    /**
-     * @throws \LogicException
-     *
-     * @return array
-     */
-    public static function getIds()
-    {
-        self::initialize();
-
-        return self::$meta[static::class]['ids'];
-    }
-
-    /**
-     * @throws \LogicException
-     *
-     * @return array
-     */
-    protected static function getConstants()
-    {
-        self::initialize();
-
-        return self::$meta[static::class]['constants'];
-    }
-
-    /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return static::$names[$this->getId()];
-    }
+        $id = $this->getId();
 
-    /**
-     * @param array $ids
-     * @param bool  $reverse
-     *
-     * @throws \LogicException
-     *
-     * @return array
-     */
-    public static function getNames(array $ids = [], $reverse = false)
-    {
-        return self::getProperties('names', $ids, $reverse);
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        if (!array_key_exists($this->getId(), self::getDescriptions())) {
-            throw new \InvalidArgumentException(sprintf('Undefined description for enum "%s"', $this->getId()));
-        }
-
-        return static::$description[$this->getId()];
-    }
-
-    /**
-     * @param array $ids
-     * @param bool  $reverse
-     *
-     * @throws \LogicException
-     *
-     * @return array
-     */
-    public static function getDescriptions(array $ids = [], $reverse = false)
-    {
-        return self::getProperties('descriptions', $ids, $reverse);
-    }
-
-    /**
-     * @param string $name
-     * @param array  $ids
-     * @param bool   $reverse
-     *
-     * @throws \LogicException
-     *
-     * @return array
-     */
-    private static function getProperties($name, array $ids = [], $reverse = false)
-    {
-        self::initialize();
-
-        $properties = static::${$name};
-
-        if ($ids) {
-            $ids = array_flip($ids);
-
-            if ($reverse) {
-                $properties = array_diff_key($properties, $ids);
-            } else {
-                $properties = array_intersect_key($properties, $ids);
+        if (property_exists(static::class, 'name')) {
+            $values = static::${'name'};
+            if ($values && array_key_exists($id, $values)) {
+                return $values[$id];
             }
         }
 
-        return $properties;
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     *
-     * @return int
-     */
-    public static function getAnyId()
-    {
-        $ids = static::getIds();
-
-        return $ids[array_rand($ids, 1)];
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     *
-     * @return static|Enum
-     */
-    public static function getAny()
-    {
-        return new static(self::getAnyId());
+        return strtolower(array_flip(self::$reflections[static::class]->getConstants())[$id]);
     }
 
     /**
      * @param array $ids
      * @param bool  $reverse
      *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     *
-     * @return static[]
+     * @return array
      */
-    public static function getList(array $ids = null, $reverse = false)
+    public static function getList(array $ids = [], $reverse = false): array
     {
-        if (null === $ids) {
-            $ids = static::getIds();
+        $all = array_values(self::$reflections[static::class]->getConstants());
+
+        if (!$ids) {
+            $ids = $all;
         } else {
-            $ids = $reverse ? array_diff(static::getIds(), $ids) : $ids;
+            $ids = $reverse ? array_diff($all, $ids) : $ids;
         }
 
         $list = [];
@@ -276,7 +112,7 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function in(array $array)
+    public function in(array $array): bool
     {
         return in_array($this->getId(), $array, true);
     }
@@ -286,7 +122,7 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function is($id)
+    public function is(int $id): bool
     {
         return $this->getId() === $id;
     }
@@ -296,30 +132,27 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function eq(Enum $enum)
+    public function eq(Enum $enum): bool
     {
         return $enum->getId() === $this->getId();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function serialize()
+    public function serialize(): string
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 
     /**
-     * @param int $serialized
+     * @param string $serialized
      *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     *
-     * @return static|Enum
+     * @return static
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): Enum
     {
-        return new static($serialized);
+        return new static((int) $serialized);
     }
 
     /**
@@ -333,53 +166,71 @@ abstract class Enum implements \Serializable
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getId();
     }
 
     /**
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param array  $arguments
      *
-     * @throws \InvalidArgumentException
+     * @return bool|string
      * @throws \BadMethodCallException
+     * @throws \InvalidArgumentException
      * @throws \LogicException
-     *
-     * @return bool
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
-        if (0 === strpos($name, 'is') && ctype_upper(substr($name, 2, 1))) {
-            $const = strtoupper(preg_replace('/\B([A-Z])/', '_$1', substr($name, 2, strlen($name))));
+        $id = $this->getId();
+        $constants = self::$reflections[static::class]->getConstants();
 
-            if (!array_key_exists($const, self::getConstants())) {
-                throw new \InvalidArgumentException(sprintf('Undefined constant "%s" in class "%s" to use method "%s"', $const, get_called_class(), $name));
+        if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
+            $const = Utils::stringToConstant(substr($name, 2, strlen($name)));
+
+            if (!array_key_exists($const, $constants)) {
+                throw new \InvalidArgumentException(sprintf(
+                        'Undefined constant "%s" in class "%s" to use method "%s"', $const, get_called_class(), $name)
+                );
             }
 
-            return $this->getId() === constant(static::class.'::'.$const);
+            return $id === constant(static::class.'::'.$const);
+        }
+
+        if (
+            0 === strpos($name, 'get')
+            && ctype_upper($name[3])
+            && property_exists(static::class, $property = strtolower(substr($name, 3)))
+        ) {
+            $values = static::${$property};
+            if (array_key_exists($id, $values)) {
+                return $values[$id];
+            }
+
+            throw new \LogicException(sprintf(
+                'Undefined value in property "%s" for "%s" constant',
+                $property,
+                $constants[$id]
+            ));
         }
 
         throw new \BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, get_called_class()));
     }
 
     /**
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param array  $arguments
      *
-     * @throws \InvalidArgumentException
+     * @return static
      * @throws \BadMethodCallException
-     * @throws \LogicException
-     *
-     * @return static|Enum
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic(string $name, array $arguments)
     {
         self::initialize();
 
-        $const = strtoupper(preg_replace('/\B([A-Z])/', '_$1', $name));
+        $const = Utils::stringToConstant($name);
 
-        if (array_key_exists($const, self::getConstants())) {
+        if (array_key_exists($const, self::$reflections[static::class]->getConstants())) {
             return new static(constant(static::class.'::'.$const));
         }
 
