@@ -1,10 +1,10 @@
 <?php
 
-use Grachev\Enum\Enum;
-use Grachev\Enum\GenderEnum;
+use Grachevko\Enum\Enum;
+use Grachevko\Enum\GenderEnum;
 
 /**
- * @author Konstantin Grachev <ko@grachev.io>
+ * @author Konstantin Grachev <me@grachevko.ru>
  */
 class GenderEnumTest extends PHPUnit_Framework_TestCase
 {

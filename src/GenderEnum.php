@@ -1,9 +1,9 @@
 <?php
 
-namespace Grachev\Enum;
+namespace Grachevko\Enum;
 
 /**
- * @author Konstantin Grachev <ko@grachev.io>
+ * @author Konstantin Grachev <me@grachevko.ru>
  *
  * @see https://en.wikipedia.org/wiki/ISO/IEC_5218
  *

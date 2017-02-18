@@ -1,11 +1,11 @@
 {
-  "name": "grachev/enum",
+  "name": "grachevko/enum",
   "description": "Enum class.",
   "license": "MIT",
   "authors": [
     {
       "name": "Konstantin Grachev",
-      "email": "ko@grachev.io"
+      "email": "me@grachevko.ru"
     }
   ],
   "require": {
@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Grachev\\Enum\\": "src/"
+      "Grachevko\\Enum\\": "src/"
     },
     "exclude-from-classmap": ["/tests/"]
   },

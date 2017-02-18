@@ -1,9 +1,9 @@
 <?php
 
-namespace Grachev\Enum;
+namespace Grachevko\Enum;
 
 /**
- * @author Konstantin Grachev <ko@grachev.io>
+ * @author Konstantin Grachev <me@grachevko.ru>
  */
 abstract class Enum implements \Serializable
 {
