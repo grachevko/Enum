@@ -18,11 +18,10 @@ namespace Grachevko\Enum;
  */
 class GenderEnum extends Enum
 {
-    const
-        UNKNOWN = 0,
-        MALE = 1,
-        FEMALE = 2,
-        UNAPPLICABLE = 9;
+    const UNKNOWN = 0;
+    const MALE = 1;
+    const FEMALE = 2;
+    const UNAPPLICABLE = 9;
 
     /**
      * @return bool

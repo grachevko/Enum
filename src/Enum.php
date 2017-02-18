@@ -112,9 +112,9 @@ abstract class Enum implements \Serializable
     /**
      * @param int $id
      *
-     * @return bool
-     *
      * @throws \LogicException
+     *
+     * @return bool
      */
     public static function hasId($id)
     {
@@ -122,9 +122,9 @@ abstract class Enum implements \Serializable
     }
 
     /**
-     * @return array
-     *
      * @throws \LogicException
+     *
+     * @return array
      */
     public static function getIds()
     {
@@ -134,9 +134,9 @@ abstract class Enum implements \Serializable
     }
 
     /**
-     * @return array
-     *
      * @throws \LogicException
+     *
+     * @return array
      */
     protected static function getConstants()
     {
@@ -157,9 +157,9 @@ abstract class Enum implements \Serializable
      * @param array $ids
      * @param bool  $reverse
      *
-     * @return array
-     *
      * @throws \LogicException
+     *
+     * @return array
      */
     public static function getNames(array $ids = [], $reverse = false)
     {
@@ -167,10 +167,10 @@ abstract class Enum implements \Serializable
     }
 
     /**
-     * @return string
-     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
+     *
+     * @return string
      */
     public function getDescription()
     {
@@ -185,9 +185,9 @@ abstract class Enum implements \Serializable
      * @param array $ids
      * @param bool  $reverse
      *
-     * @return array
-     *
      * @throws \LogicException
+     *
+     * @return array
      */
     public static function getDescriptions(array $ids = [], $reverse = false)
     {
@@ -199,9 +199,9 @@ abstract class Enum implements \Serializable
      * @param array  $ids
      * @param bool   $reverse
      *
-     * @return array
-     *
      * @throws \LogicException
+     *
+     * @return array
      */
     private static function getProperties($name, array $ids = [], $reverse = false)
     {
@@ -223,10 +223,10 @@ abstract class Enum implements \Serializable
     }
 
     /**
-     * @return int
-     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
+     *
+     * @return int
      */
     public static function getAnyId()
     {
@@ -236,10 +236,10 @@ abstract class Enum implements \Serializable
     }
 
     /**
-     * @return static|Enum
-     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
+     *
+     * @return static|Enum
      */
     public static function getAny()
     {
@@ -250,10 +250,10 @@ abstract class Enum implements \Serializable
      * @param array $ids
      * @param bool  $reverse
      *
-     * @return static[]
-     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
+     *
+     * @return static[]
      */
     public static function getList(array $ids = null, $reverse = false)
     {
@@ -312,10 +312,10 @@ abstract class Enum implements \Serializable
     /**
      * @param int $serialized
      *
-     * @return static|Enum
-     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
+     *
+     * @return static|Enum
      */
     public function unserialize($serialized)
     {
@@ -342,11 +342,11 @@ abstract class Enum implements \Serializable
      * @param $name
      * @param $arguments
      *
-     * @return bool
-     *
      * @throws \InvalidArgumentException
      * @throws \BadMethodCallException
      * @throws \LogicException
+     *
+     * @return bool
      */
     public function __call($name, $arguments)
     {
@@ -367,11 +367,11 @@ abstract class Enum implements \Serializable
      * @param $name
      * @param $arguments
      *
-     * @return static|Enum
-     *
      * @throws \InvalidArgumentException
      * @throws \BadMethodCallException
      * @throws \LogicException
+     *
+     * @return static|Enum
      */
     public static function __callStatic($name, $arguments)
     {

@@ -20,8 +20,7 @@ class GenderEnumTest extends TestCase
     {
         $this->expectException(\LogicException::class);
 
-        $class = EmptyEnum::class;
-        self::throwException(new $class(10));
+        new EmptyEnum(10);
     }
 
     public function testEnumIsMale()
