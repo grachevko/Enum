@@ -179,6 +179,8 @@ abstract class Enum implements \Serializable
      */
     public function __call(string $name, array $arguments)
     {
+        self::initialize();
+
         $id = $this->getId();
         $constants = self::$reflections[static::class]->getConstants();
 
