@@ -13,7 +13,7 @@ class GenderEnumTest extends TestCase
 {
     public function testEnumStringArg()
     {
-        self::assertEquals(1, (new GenderEnum('1'))->getId());
+        self::assertSame(1, (new GenderEnum('1'))->getId());
     }
 
     public function testEnumEmptyClass()
@@ -29,7 +29,7 @@ class GenderEnumTest extends TestCase
         self::assertTrue($male->isMale());
         self::assertFalse($male->isFemale());
         self::assertFalse($male->isUnapplicable());
-        self::assertEquals('male', $male->getName());
+        self::assertSame('male', $male->getName());
     }
 
     public function testEnumIsFemale()
@@ -38,14 +38,14 @@ class GenderEnumTest extends TestCase
         self::assertTrue($female->isFemale());
         self::assertFalse($female->isMale());
         self::assertFalse($female->isUnapplicable());
-        self::assertEquals('female', $female->getName());
+        self::assertSame('female', $female->getName());
     }
 
     public function testEnumGetNames()
     {
-        self::assertEquals([0 => 'unknown', 1 => 'male', 2 => 'female', 9 => 'unapplicable'], GenderEnum::getNames());
-        self::assertEquals([0 => 'unknown'], GenderEnum::getNames([1, 2, 9], true));
-        self::assertEquals([1 => 'male'], GenderEnum::getNames([1]));
+        self::assertSame([0 => 'unknown', 1 => 'male', 2 => 'female', 9 => 'unapplicable'], GenderEnum::getNames());
+        self::assertSame([0 => 'unknown'], GenderEnum::getNames([1, 2, 9], true));
+        self::assertSame([1 => 'male'], GenderEnum::getNames([1]));
     }
 
     public function testEnumToArray()
@@ -91,8 +91,8 @@ class GenderEnumTest extends TestCase
 
     public function testEnumCall()
     {
-        self::assertEquals(true, GenderEnum::male()->isMale());
-        self::assertEquals(false, GenderEnum::female()->isMale());
+        self::assertTrue(GenderEnum::male()->isMale());
+        self::assertFalse(GenderEnum::female()->isMale());
 
         $this->expectException(\InvalidArgumentException::class);
         self::throwException(GenderEnum::unapplicable()->{'isBoom'}());
@@ -103,11 +103,11 @@ class GenderEnumTest extends TestCase
 
     public function testEnumPrefixAndPostfix()
     {
-        self::assertEquals('male', GenderEnum::male()->getName());
+        self::assertSame('male', GenderEnum::male()->getName());
 
-        self::assertEquals('prefix.test.postfix', TestEnum::test()->getName());
+        self::assertSame('prefix.test.postfix', TestEnum::test()->getName());
 
-        self::assertEquals('yo', TestEnum::named()->getName());
+        self::assertSame('yo', TestEnum::named()->getName());
     }
 }
 
