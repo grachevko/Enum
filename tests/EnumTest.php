@@ -32,7 +32,7 @@ final class EnumTest extends TestCase
     public function testNameValue()
     {
         self::assertSame('yo', TestEnum::one()->getName());
-        self::assertSame('two', TestEnum::two()->getName());
+        self::assertSame('TWO', TestEnum::two()->getName());
     }
 
     public function testCustomPropertyValue()
@@ -52,6 +52,14 @@ final class EnumTest extends TestCase
         self::assertEquals([TestEnum::one(), TestEnum::two()], TestEnum::all());
         self::assertEquals([TestEnum::one()], TestEnum::all([TestEnum::ONE]));
         self::assertEquals([TestEnum::two()], TestEnum::all([TestEnum::TWO]), true);
+    }
+
+    public function testReadableName()
+    {
+        $readableEnum = ReadableEnum::roleAdmin();
+
+        self::assertSame('ROLE_ADMIN', $readableEnum->getName());
+        self::assertSame('Role Admin', $readableEnum->getReadableName());
     }
 }
 
@@ -82,4 +90,12 @@ class StringValueEnum extends Enum
 {
     const ONE = 1;
     const WRONG_VALUE = 'string';
+}
+
+/**
+ * @method static ReadableEnum roleAdmin()
+ */
+class ReadableEnum extends Enum
+{
+    const ROLE_ADMIN = 1;
 }

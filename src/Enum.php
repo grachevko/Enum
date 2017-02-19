@@ -82,7 +82,15 @@ abstract class Enum implements \Serializable
             }
         }
 
-        return strtolower(array_flip(self::getReflection()->getConstants())[$id]);
+        return array_flip(self::getReflection()->getConstants())[$id];
+    }
+
+    /**
+     * @return string
+     */
+    public function getReadableName(): string
+    {
+        return mb_convert_case(str_replace('_', ' ', $this->getName()), MB_CASE_TITLE);
     }
 
     /**
