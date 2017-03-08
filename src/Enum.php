@@ -15,7 +15,7 @@ abstract class Enum implements \Serializable
     /**
      * @var \ReflectionClass[]
      */
-    private static $reflections;
+    private static $reflections = [];
 
     /**
      * @param int $id
@@ -40,8 +40,8 @@ abstract class Enum implements \Serializable
     {
         $class = static::class;
 
-        if ($reflection = self::$reflections[$class]) {
-            return $reflection;
+        if (array_key_exists($class, self::$reflections)) {
+            return self::$reflections[$class];
         }
 
         self::$reflections[$class] = $reflection = new \ReflectionClass($class);
@@ -205,11 +205,8 @@ abstract class Enum implements \Serializable
             return $id === constant(static::class.'::'.$const);
         }
 
-        if (
-            0 === strpos($name, 'get')
-            && ctype_upper($name[3])
-            && property_exists(static::class, $property = strtolower(substr($name, 3)))
-        ) {
+        $property = strtolower(substr($name, 3));
+        if (0 === strpos($name, 'get') && property_exists(static::class, $property) && ctype_upper($name[3])) {
             $values = static::${$property};
             if (array_key_exists($id, $values)) {
                 return $values[$id];
@@ -218,7 +215,7 @@ abstract class Enum implements \Serializable
             throw new \LogicException(sprintf(
                 'Undefined value in property "%s" for "%s" constant',
                 $property,
-                $constants[$id]
+                array_flip($constants)[$id]
             ));
         }
 
