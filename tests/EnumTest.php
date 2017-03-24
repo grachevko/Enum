@@ -61,12 +61,18 @@ final class EnumTest extends TestCase
         self::assertSame('ROLE_ADMIN', $readableEnum->getName());
         self::assertSame('Role Admin', $readableEnum->getReadableName());
     }
+
+    public function testCompositeCustomValue()
+    {
+        self::assertEquals('This is two description for one', TestEnum::one()->getDescriptionTwo());
+    }
 }
 
 /**
  * @method static TestEnum one()
  * @method static TestEnum two()
  * @method string getDescription()
+ * @method string getDescriptionTwo()
  */
 class TestEnum extends Enum
 {
@@ -79,6 +85,10 @@ class TestEnum extends Enum
 
     protected static $description = [
         self::TWO => 'This is a description for TestEnum::TWO',
+    ];
+
+    protected static $descriptionTwo = [
+        self::ONE => 'This is two description for one',
     ];
 }
 

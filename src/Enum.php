@@ -205,7 +205,7 @@ abstract class Enum implements \Serializable
             return $id === constant(static::class.'::'.$const);
         }
 
-        $property = strtolower(substr($name, 3));
+        $property = lcfirst(substr($name, 3));
         if (0 === strpos($name, 'get') && property_exists(static::class, $property) && ctype_upper($name[3])) {
             $values = static::${$property};
             if (array_key_exists($id, $values)) {
