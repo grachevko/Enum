@@ -1,0 +1,5 @@
+services:
+	-
+		class: Grachevko\Enum\PHPStan\EnumMethodsClassReflectionExtension
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension
