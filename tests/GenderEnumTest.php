@@ -28,7 +28,7 @@ class GenderEnumTest extends TestCase
         self::assertTrue($male->isMale());
         self::assertFalse($male->isFemale());
         self::assertFalse($male->isUnapplicable());
-        self::assertSame('MALE', $male->getName());
+        self::assertSame('male', $male->getName());
         self::assertSame('Male', $male->getReadableName());
     }
 
@@ -38,7 +38,7 @@ class GenderEnumTest extends TestCase
         self::assertTrue($female->isFemale());
         self::assertFalse($female->isMale());
         self::assertFalse($female->isUnapplicable());
-        self::assertSame('FEMALE', $female->getName());
+        self::assertSame('female', $female->getName());
         self::assertSame('Female', $female->getReadableName());
     }
 

@@ -82,7 +82,7 @@ abstract class Enum implements \Serializable
             }
         }
 
-        return array_flip(self::getReflection()->getConstants())[$id];
+        return strtolower(array_flip(self::getReflection()->getConstants())[$id]);
     }
 
     /**
