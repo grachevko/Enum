@@ -78,6 +78,14 @@ final class EnumTest extends TestCase
         }
 
         self::assertInstanceOf(PrivateConstEnum::class, $enum);
+        self::assertTrue($enum->isIAmPrivate());
+    }
+
+    public function testMethodEq()
+    {
+        self::assertTrue(TestEnum::one()->eq(TestEnum::one()));
+        self::assertFalse(TestEnum::one()->eq(TestEnum::two()));
+        self::assertFalse(TestEnum::one()->eq(AnotherTestEnum::one()));
     }
 }
 
@@ -105,6 +113,14 @@ class TestEnum extends Enum
     ];
 }
 
+/**
+ * @method static AnotherTestEnum one()
+ */
+class AnotherTestEnum extends Enum
+{
+    public const ONE = 1;
+}
+
 class EmptyEnum extends Enum
 {
 }
@@ -124,7 +140,8 @@ class ReadableEnum extends Enum
 }
 
 /**
- * @method static iAmPrivate()
+ * @method static PrivateConstEnum iAmPrivate()
+ * @method bool isIAmPrivate()
  */
 class PrivateConstEnum extends Enum
 {
