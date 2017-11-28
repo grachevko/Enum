@@ -67,6 +67,18 @@ final class EnumTest extends TestCase
     {
         self::assertEquals('This is two description for one', TestEnum::one()->getDescriptionTwo());
     }
+
+    public function testPrivateConstants()
+    {
+        $enum = null;
+
+        try {
+            $enum = PrivateConstEnum::iAmPrivate();
+        } catch (\Throwable $e) {
+        }
+
+        self::assertInstanceOf(PrivateConstEnum::class, $enum);
+    }
 }
 
 /**
@@ -77,8 +89,8 @@ final class EnumTest extends TestCase
  */
 class TestEnum extends Enum
 {
-    const ONE = 1;
-    const TWO = 2;
+    public const ONE = 1;
+    public const TWO = 2;
 
     protected static $name = [
         self::ONE => 'yo',
@@ -99,8 +111,8 @@ class EmptyEnum extends Enum
 
 class StringValueEnum extends Enum
 {
-    const ONE = 1;
-    const WRONG_VALUE = 'string';
+    public const ONE = 1;
+    public const WRONG_VALUE = 'string';
 }
 
 /**
@@ -108,5 +120,13 @@ class StringValueEnum extends Enum
  */
 class ReadableEnum extends Enum
 {
-    const ROLE_ADMIN = 1;
+    public const ROLE_ADMIN = 1;
+}
+
+/**
+ * @method static iAmPrivate()
+ */
+class PrivateConstEnum extends Enum
+{
+    private const I_AM_PRIVATE = 1;
 }

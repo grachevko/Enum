@@ -202,7 +202,7 @@ abstract class Enum implements \Serializable
                 );
             }
 
-            return $id === constant(static::class.'::'.$const);
+            return $this->eq(new static($constants[$const]));
         }
 
         $property = lcfirst(substr($name, 3));
@@ -233,9 +233,10 @@ abstract class Enum implements \Serializable
     public static function __callStatic(string $name, array $arguments)
     {
         $const = Utils::stringToConstant($name);
+        $constants = self::getReflection()->getConstants();
 
-        if (array_key_exists($const, self::getReflection()->getConstants())) {
-            return new static(constant(static::class.'::'.$const));
+        if (array_key_exists($const, $constants)) {
+            return new static($constants[$const]);
         }
 
         throw new \BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, get_called_class()));
