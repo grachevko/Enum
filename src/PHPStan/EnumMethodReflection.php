@@ -3,6 +3,7 @@
 namespace Grachevko\Enum\PHPStan;
 
 use Grachevko\Enum\Enum;
+use Grachevko\Enum\Utils;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\ObjectType;
@@ -71,6 +72,6 @@ final class EnumMethodReflection implements MethodReflection
 
     public function getReturnType(): Type
     {
-        return new ObjectType(Enum::class, false);
+        return new ObjectType(Enum::class);
     }
 }

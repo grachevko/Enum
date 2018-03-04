@@ -2,6 +2,11 @@
 
 namespace Grachevko\Enum;
 
+use BadMethodCallException;
+use InvalidArgumentException;
+use LogicException;
+use ReflectionClass;
+
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
@@ -13,30 +18,30 @@ abstract class Enum implements \Serializable
     private $id;
 
     /**
-     * @var \ReflectionClass[]
+     * @var ReflectionClass[]
      */
     private static $reflections = [];
 
     /**
      * @param int $id
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(int $id)
     {
-        if (!in_array($id, self::getReflection()->getConstants(), true)) {
-            throw new \InvalidArgumentException(sprintf('Undefined enum "%s" of class "%s"', $id, get_called_class()));
+        if (!\in_array($id, self::getReflection()->getConstants(), true)) {
+            throw new InvalidArgumentException(sprintf('Undefined enum "%s" of class "%s"', $id, static::class));
         }
 
         $this->id = $id;
     }
 
     /**
-     * @return \ReflectionClass
+     * @throws LogicException
      *
-     * @throws \LogicException
+     * @return ReflectionClass
      */
-    private static function getReflection(): \ReflectionClass
+    private static function getReflection(): ReflectionClass
     {
         $class = static::class;
 
@@ -44,16 +49,16 @@ abstract class Enum implements \Serializable
             return self::$reflections[$class];
         }
 
-        self::$reflections[$class] = $reflection = new \ReflectionClass($class);
+        self::$reflections[$class] = $reflection = new ReflectionClass($class);
 
         $constants = $reflection->getConstants();
         if (!$constants) {
-            throw new \LogicException(sprintf('Class %s must define Constants', get_called_class()));
+            throw new LogicException(sprintf('Class %s must define Constants', static::class));
         }
 
         foreach ($constants as $value) {
-            if (!is_int($value)) {
-                throw new \LogicException('All enum constants must be in integer type');
+            if (!\is_int($value)) {
+                throw new LogicException('All enum constants must be in integer type');
             }
         }
 
@@ -121,7 +126,7 @@ abstract class Enum implements \Serializable
      */
     public function in(array $array): bool
     {
-        return in_array($this->getId(), $array, true);
+        return \in_array($this->getId(), $array, true);
     }
 
     /**
@@ -139,7 +144,7 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function eq(Enum $enum): bool
+    public function eq(self $enum): bool
     {
         return $this instanceof $enum && $enum->getId() === $this->getId();
     }
@@ -157,7 +162,7 @@ abstract class Enum implements \Serializable
      *
      * @return static
      */
-    public function unserialize($serialized): Enum
+    public function unserialize($serialized): self
     {
         return new static((int) $serialized);
     }
@@ -165,7 +170,7 @@ abstract class Enum implements \Serializable
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [$this->getId() => $this];
     }
@@ -182,11 +187,11 @@ abstract class Enum implements \Serializable
      * @param string $name
      * @param array  $arguments
      *
-     * @return bool|string
+     * @throws BadMethodCallException
+     * @throws InvalidArgumentException
+     * @throws LogicException
      *
-     * @throws \BadMethodCallException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * @return bool|string
      */
     public function __call(string $name, array $arguments)
     {
@@ -194,11 +199,11 @@ abstract class Enum implements \Serializable
         $constants = self::getReflection()->getConstants();
 
         if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
-            $const = Utils::stringToConstant(substr($name, 2, strlen($name)));
+            $const = Utils::stringToConstant(substr($name, 2, \strlen($name)));
 
             if (!array_key_exists($const, $constants)) {
-                throw new \InvalidArgumentException(sprintf(
-                        'Undefined constant "%s" in class "%s" to use method "%s"', $const, get_called_class(), $name)
+                throw new InvalidArgumentException(sprintf(
+                        'Undefined constant "%s" in class "%s" to use method "%s"', $const, static::class, $name)
                 );
             }
 
@@ -212,23 +217,23 @@ abstract class Enum implements \Serializable
                 return $values[$id];
             }
 
-            throw new \LogicException(sprintf(
+            throw new LogicException(sprintf(
                 'Undefined value in property "%s" for "%s" constant',
                 $property,
                 array_flip($constants)[$id]
             ));
         }
 
-        throw new \BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, get_called_class()));
+        throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
     }
 
     /**
      * @param string $name
      * @param array  $arguments
      *
-     * @return static
+     * @throws BadMethodCallException
      *
-     * @throws \BadMethodCallException
+     * @return static
      */
     public static function __callStatic(string $name, array $arguments)
     {
@@ -239,6 +244,6 @@ abstract class Enum implements \Serializable
             return new static($constants[$const]);
         }
 
-        throw new \BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, get_called_class()));
+        throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
     }
 }

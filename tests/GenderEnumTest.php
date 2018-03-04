@@ -2,7 +2,9 @@
 
 namespace Grachevko\Enum\Tests;
 
+use BadMethodCallException;
 use Grachevko\Enum\GenderEnum;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,7 +26,7 @@ class GenderEnumTest extends TestCase
 
     public function testEnumIsMale()
     {
-        $male = new GenderEnum(GenderEnum::MALE);
+        $male = GenderEnum::male();
         self::assertTrue($male->isMale());
         self::assertFalse($male->isFemale());
         self::assertFalse($male->isUnapplicable());
@@ -34,7 +36,7 @@ class GenderEnumTest extends TestCase
 
     public function testEnumIsFemale()
     {
-        $female = new GenderEnum(GenderEnum::FEMALE);
+        $female = GenderEnum::female();
         self::assertTrue($female->isFemale());
         self::assertFalse($female->isMale());
         self::assertFalse($female->isUnapplicable());
@@ -44,17 +46,17 @@ class GenderEnumTest extends TestCase
 
     public function testEnumToArray()
     {
-        self::assertEquals([GenderEnum::MALE => GenderEnum::male()], GenderEnum::male()->toArray());
+        self::assertEquals([GenderEnum::male()->getId() => GenderEnum::male()], GenderEnum::male()->toArray());
     }
 
     public function testEnumCallStatic()
     {
-        self::assertEquals(new GenderEnum(GenderEnum::UNKNOWN), GenderEnum::unknown());
-        self::assertEquals(new GenderEnum(GenderEnum::MALE), GenderEnum::male());
-        self::assertEquals(new GenderEnum(GenderEnum::FEMALE), GenderEnum::female());
-        self::assertEquals(new GenderEnum(GenderEnum::UNAPPLICABLE), GenderEnum::unapplicable());
+        self::assertEquals(new GenderEnum(0), GenderEnum::unknown());
+        self::assertEquals(new GenderEnum(1), GenderEnum::male());
+        self::assertEquals(new GenderEnum(2), GenderEnum::female());
+        self::assertEquals(new GenderEnum(9), GenderEnum::unapplicable());
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::throwException(GenderEnum::{'boom'}());
     }
 
@@ -63,10 +65,10 @@ class GenderEnumTest extends TestCase
         self::assertTrue(GenderEnum::male()->isMale());
         self::assertFalse(GenderEnum::female()->isMale());
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         self::throwException(GenderEnum::unapplicable()->{'isBoom'}());
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::throwException(GenderEnum::unapplicable()->{'boom'}());
     }
 }

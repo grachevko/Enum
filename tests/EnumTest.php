@@ -3,6 +3,7 @@
 namespace Grachevko\Enum\Tests;
 
 use Grachevko\Enum\Enum;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,7 +13,7 @@ final class EnumTest extends TestCase
 {
     public function testEmptyEnum()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
 
         new EmptyEnum(1);
     }
@@ -24,7 +25,7 @@ final class EnumTest extends TestCase
 
     public function testIntegerValue()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
 
         new StringValueEnum(1);
     }
@@ -43,7 +44,7 @@ final class EnumTest extends TestCase
 
     public function testCustomUndefinedValue()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
 
         TestEnum::one()->getDescription();
     }
@@ -141,7 +142,7 @@ class ReadableEnum extends Enum
 
 /**
  * @method static PrivateConstEnum iAmPrivate()
- * @method bool isIAmPrivate()
+ * @method bool   isIAmPrivate()
  */
 class PrivateConstEnum extends Enum
 {
