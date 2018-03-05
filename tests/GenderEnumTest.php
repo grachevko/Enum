@@ -12,19 +12,19 @@ use PHPUnit\Framework\TestCase;
  */
 class GenderEnumTest extends TestCase
 {
-    public function testEnumStringArg()
+    public function testEnumStringArg(): void
     {
         self::assertSame(1, (new GenderEnum('1'))->getId());
     }
 
-    public function testEnumEmptyClass()
+    public function testEnumEmptyClass(): void
     {
         $this->expectException(\LogicException::class);
 
         new EmptyEnum(10);
     }
 
-    public function testEnumIsMale()
+    public function testEnumIsMale(): void
     {
         $male = GenderEnum::male();
         self::assertTrue($male->isMale());
@@ -34,7 +34,7 @@ class GenderEnumTest extends TestCase
         self::assertSame('Male', $male->getReadableName());
     }
 
-    public function testEnumIsFemale()
+    public function testEnumIsFemale(): void
     {
         $female = GenderEnum::female();
         self::assertTrue($female->isFemale());
@@ -44,12 +44,12 @@ class GenderEnumTest extends TestCase
         self::assertSame('Female', $female->getReadableName());
     }
 
-    public function testEnumToArray()
+    public function testEnumToArray(): void
     {
         self::assertEquals([GenderEnum::male()->getId() => GenderEnum::male()], GenderEnum::male()->toArray());
     }
 
-    public function testEnumCallStatic()
+    public function testEnumCallStatic(): void
     {
         self::assertEquals(new GenderEnum(0), GenderEnum::unknown());
         self::assertEquals(new GenderEnum(1), GenderEnum::male());
@@ -60,7 +60,7 @@ class GenderEnumTest extends TestCase
         self::throwException(GenderEnum::{'boom'}());
     }
 
-    public function testEnumCall()
+    public function testEnumCall(): void
     {
         self::assertTrue(GenderEnum::male()->isMale());
         self::assertFalse(GenderEnum::female()->isMale());
