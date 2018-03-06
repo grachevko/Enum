@@ -8,7 +8,6 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony'                              => true,
-        '@Symfony:risky'                        => true,
         'array_syntax'                          => ['syntax' => 'short'],
         'binary_operator_spaces'                => ['align_double_arrow' => false],
         'linebreak_after_opening_tag'           => true,

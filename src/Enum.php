@@ -187,7 +187,7 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function eq(self $enum): bool
+    public function eq(Enum $enum): bool
     {
         return $this instanceof $enum && $enum->getId() === $this->getId();
     }
