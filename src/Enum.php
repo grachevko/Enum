@@ -234,7 +234,7 @@ abstract class Enum implements \Serializable
         self::$reflections[$class] = $reflection = new ReflectionClass($class);
 
         $constants = $reflection->getConstants();
-        if (!$constants) {
+        if ([] === $constants) {
             throw new LogicException(sprintf('Class %s must define Constants', static::class));
         }
 
