@@ -202,12 +202,10 @@ abstract class Enum implements \Serializable
 
     /**
      * @param string $serialized
-     *
-     * @return static
      */
-    public function unserialize($serialized): self
+    public function unserialize($serialized): void
     {
-        return new static((int) $serialized);
+        $this->id = (int) $serialized;
     }
 
     /**
