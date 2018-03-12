@@ -14,7 +14,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Grachevko\\Enum\\": "src/"
+      "Grachevko\\Enum\\": "src/",
+      "Grachevko\\Enum\\PHPStan\\": "PHPStan/"
     },
     "exclude-from-classmap": ["/tests/"]
   },
