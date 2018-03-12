@@ -88,6 +88,18 @@ final class EnumTest extends TestCase
         self::assertFalse(TestEnum::one()->eq(TestEnum::two()));
         self::assertFalse(TestEnum::one()->eq(AnotherTestEnum::one()));
     }
+
+    public function testSerialization(): void
+    {
+        $enum = TestEnum::one();
+
+        $serialized = serialize($enum);
+
+        $unserialized = unserialize($serialized);
+
+        $this->assertInstanceOf(TestEnum::class, $unserialized);
+        $this->assertTrue($enum->eq($unserialized));
+    }
 }
 
 /**
