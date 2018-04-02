@@ -94,16 +94,35 @@ abstract class Enum implements \Serializable
      * @param array  $arguments
      *
      * @throws BadMethodCallException
+     * @throws LogicException
      *
      * @return static
      */
     public static function __callStatic(string $name, array $arguments)
     {
+        $reflectionClass = self::getReflection();
+
         $const = Utils::stringToConstant($name);
-        $constants = self::getReflection()->getConstants();
+        $constants = $reflectionClass->getConstants();
 
         if (array_key_exists($const, $constants)) {
             return new static($constants[$const]);
+        }
+
+        if (0 === strpos($name, 'from') && ctype_upper($name[4])) {
+            $property = lcfirst(substr($name, 4));
+
+            $value = $arguments[0];
+            $values = array_flip(self::getProperty($property));
+            if (array_key_exists($value, $values)) {
+                return new static($values[$value]);
+            }
+
+            throw new LogicException(sprintf(
+                'Undefined value "%s" in property "%s"',
+                $value,
+                $property
+            ));
         }
 
         throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
@@ -238,7 +257,7 @@ abstract class Enum implements \Serializable
         return $reflection;
     }
 
-    private function getPropertyValue(string $property)
+    private static function getProperty(string $property): array
     {
         $reflectionClass = self::getReflection();
 
@@ -253,6 +272,11 @@ abstract class Enum implements \Serializable
             }
         }
 
-        return $values[$this->getId()] ?? null;
+        return $values;
+    }
+
+    private function getPropertyValue(string $property)
+    {
+        return self::getProperty($property)[$this->getId()] ?? null;
     }
 }

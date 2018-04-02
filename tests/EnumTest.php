@@ -100,6 +100,11 @@ final class EnumTest extends TestCase
         $this->assertInstanceOf(TestEnum::class, $unserialized);
         $this->assertTrue($enum->eq($unserialized));
     }
+
+    public function testFrom(): void
+    {
+        self::assertInstanceOf(Enum::class, TestEnum::fromName('yo'));
+    }
 }
 
 /**
@@ -107,6 +112,7 @@ final class EnumTest extends TestCase
  * @method static TestEnum two()
  * @method string getDescription()
  * @method string getDescriptionTwo()
+ * @method static self fromName(string $name)
  */
 class TestEnum extends Enum
 {
