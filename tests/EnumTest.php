@@ -113,15 +113,15 @@ class TestEnum extends Enum
     public const ONE = 1;
     public const TWO = 2;
 
-    protected static $name = [
+    private static $name = [
         self::ONE => 'yo',
     ];
 
-    protected static $description = [
+    private static $description = [
         self::TWO => 'This is a description for TestEnum::TWO',
     ];
 
-    protected static $descriptionTwo = [
+    private static $descriptionTwo = [
         self::ONE => 'This is two description for one',
     ];
 }

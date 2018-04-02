@@ -57,7 +57,8 @@ abstract class Enum implements \Serializable
     public function __call(string $name, array $arguments)
     {
         $id = $this->getId();
-        $constants = self::getReflection()->getConstants();
+        $reflectionClass = self::getReflection();
+        $constants = $reflectionClass->getConstants();
 
         if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
             $const = Utils::stringToConstant(substr($name, 2, \strlen($name)));
@@ -71,11 +72,11 @@ abstract class Enum implements \Serializable
             return $this->eq(new static($constants[$const]));
         }
 
-        $property = lcfirst(substr($name, 3));
-        if (0 === strpos($name, 'get') && property_exists(static::class, $property) && ctype_upper($name[3])) {
-            $values = static::${$property};
-            if (array_key_exists($id, $values)) {
-                return $values[$id];
+        if (0 === strpos($name, 'get') && ctype_upper($name[3])) {
+            $property = lcfirst(substr($name, 3));
+
+            if ($value = $this->getPropertyValue($property)) {
+                return $value;
             }
 
             throw new LogicException(sprintf(
@@ -121,16 +122,8 @@ abstract class Enum implements \Serializable
      */
     public function getName(): string
     {
-        $id = $this->getId();
-
-        if (property_exists(static::class, 'name')) {
-            $values = static::${'name'};
-            if ($values && array_key_exists($id, $values)) {
-                return $values[$id];
-            }
-        }
-
-        return strtolower(array_flip(self::getReflection()->getConstants())[$id]);
+        return $this->getPropertyValue('name')
+            ?? strtolower(array_flip(self::getReflection()->getConstants())[$this->getId()]);
     }
 
     /**
@@ -243,5 +236,23 @@ abstract class Enum implements \Serializable
         }
 
         return $reflection;
+    }
+
+    private function getPropertyValue(string $property)
+    {
+        $reflectionClass = self::getReflection();
+
+        $values = [];
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            if ($reflectionProperty->getName() === $property) {
+                $reflectionProperty->setAccessible(true);
+                $values = $reflectionProperty->getValue();
+                $reflectionProperty->setAccessible(false);
+
+                break;
+            }
+        }
+
+        return $values[$this->getId()] ?? null;
     }
 }
