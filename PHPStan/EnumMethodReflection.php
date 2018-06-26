@@ -2,12 +2,10 @@
 
 namespace Grachevko\Enum\PHPStan;
 
-use Grachevko\Enum\Enum;
 use Grachevko\Enum\Utils;
+use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Type\ObjectType;
-use PHPStan\Type\Type;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -30,6 +28,11 @@ final class EnumMethodReflection implements MethodReflection
         $this->name = $methodName;
     }
 
+    public function getVariants(): array
+    {
+        return [];
+    }
+
     public function getDeclaringClass(): ClassReflection
     {
         return $this->classReflection;
@@ -50,7 +53,7 @@ final class EnumMethodReflection implements MethodReflection
         return true;
     }
 
-    public function getPrototype(): MethodReflection
+    public function getPrototype(): ClassMemberReflection
     {
         return $this;
     }
@@ -58,20 +61,5 @@ final class EnumMethodReflection implements MethodReflection
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getParameters(): array
-    {
-        return [];
-    }
-
-    public function isVariadic(): bool
-    {
-        return false;
-    }
-
-    public function getReturnType(): Type
-    {
-        return new ObjectType(Enum::class);
     }
 }
