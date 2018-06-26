@@ -20,7 +20,7 @@ return PhpCsFixer\Config::create()
         'not_operator_with_successor_space'     => false,
         'ordered_class_elements'                => true,
         'ordered_imports'                       => true,
-        'php_unit_strict'                       => true,
+        'php_unit_strict' => false,
         'phpdoc_order'                          => true,
         'phpdoc_types_order'                    => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
         'simplified_null_return'                => false,
