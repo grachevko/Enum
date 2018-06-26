@@ -5,7 +5,9 @@ namespace Grachevko\Enum\PHPStan;
 use Grachevko\Enum\Utils;
 use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Type\VoidType;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -22,6 +24,11 @@ final class EnumMethodReflection implements MethodReflection
      */
     private $name;
 
+    /**
+     * @var FunctionVariant[]|null
+     */
+    private $variants;
+
     public function __construct(ClassReflection $classReflection, string $methodName)
     {
         $this->classReflection = $classReflection;
@@ -30,7 +37,13 @@ final class EnumMethodReflection implements MethodReflection
 
     public function getVariants(): array
     {
-        return [];
+        if (null === $this->variants) {
+            $this->variants = [
+                new FunctionVariant([], false, new VoidType()),
+            ];
+        }
+
+        return $this->variants;
     }
 
     public function getDeclaringClass(): ClassReflection
