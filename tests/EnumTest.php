@@ -53,7 +53,7 @@ final class EnumTest extends TestCase
     {
         self::assertEquals([TestEnum::one(), TestEnum::two()], TestEnum::all());
         self::assertEquals([TestEnum::one()], TestEnum::all([TestEnum::ONE]));
-        self::assertEquals([TestEnum::two()], TestEnum::all([TestEnum::TWO]), true);
+        self::assertEquals([TestEnum::two()], TestEnum::all([TestEnum::TWO]));
     }
 
     public function testReadableName(): void

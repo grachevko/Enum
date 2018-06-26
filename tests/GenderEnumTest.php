@@ -14,7 +14,7 @@ class GenderEnumTest extends TestCase
 {
     public function testEnumStringArg(): void
     {
-        self::assertSame(1, (new GenderEnum('1'))->getId());
+        self::assertSame(1, (new GenderEnum(1))->getId());
     }
 
     public function testEnumEmptyClass(): void
