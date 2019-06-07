@@ -20,7 +20,7 @@
     "exclude-from-classmap": ["/tests/"]
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.2.6",
+    "phpunit/phpunit": "^8.2.1",
     "friendsofphp/php-cs-fixer": "^2.12.1",
     "phpstan/phpstan": "^0.11.2"
   }
