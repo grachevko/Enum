@@ -11,7 +11,6 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 use Serializable;
-use function strlen;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -76,7 +75,7 @@ abstract class Enum implements Serializable
         $reflection = self::getReflection();
 
         if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
-            $const = Utils::stringToConstant(substr($name, 2, strlen($name)));
+            $const = Utils::stringToConstant(substr($name, 2));
 
             if (!$reflection->hasConstant($const)) {
                 throw new InvalidArgumentException(
@@ -176,6 +175,11 @@ abstract class Enum implements Serializable
         return strtolower(array_flip(self::getReflection()->getConstants())[$this->getId()]);
     }
 
+    /**
+     * @param string $property
+     *
+     * @return mixed
+     */
     final public function get(string $property)
     {
         return self::$properties[static::class][$property]->getValue()[$this->getId()];

@@ -1,4 +1,7 @@
-all: composer-validate cs phpstan phpunit
+all: composer-validate cs psalm phpstan phpunit
+
+psalm:
+	php vendor/bin/psalm
 
 phpstan:
 	php vendor/bin/phpstan analyse
