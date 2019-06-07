@@ -16,13 +16,12 @@
     "psr-4": {
       "Grachevko\\Enum\\": "src/",
       "Grachevko\\Enum\\Tests\\": "tests/",
-      "Grachevko\\Enum\\PHPStan\\": "PHPStan/"
     },
     "exclude-from-classmap": ["/tests/"]
   },
   "require-dev": {
     "phpunit/phpunit": "^7.2.6",
     "friendsofphp/php-cs-fixer": "^2.12.1",
-    "phpstan/phpstan": "^0.10"
+    "phpstan/phpstan": "^0.11.2"
   }
 }
