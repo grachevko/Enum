@@ -182,16 +182,6 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @throws ReflectionException
-     *
-     * @return string
-     */
-    final public function getReadableName(): string
-    {
-        return mb_convert_case(str_replace('_', ' ', $this->getName()), MB_CASE_TITLE);
-    }
-
-    /**
      * @param array $ids
      * @param bool  $reverse
      *

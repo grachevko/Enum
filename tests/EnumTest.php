@@ -34,7 +34,6 @@ final class EnumTest extends TestCase
     {
         self::assertSame('yo', TestEnum::one()->getName());
         self::assertSame('one', AnotherTestEnum::one()->getName());
-        self::assertSame('One', AnotherTestEnum::one()->getReadableName());
     }
 
     public function testCustomPropertyValue(): void
@@ -54,7 +53,6 @@ final class EnumTest extends TestCase
         $readableEnum = ReadableEnum::roleAdmin();
 
         self::assertSame('role_admin', $readableEnum->getName());
-        self::assertSame('Role Admin', $readableEnum->getReadableName());
     }
 
     public function testCompositeCustomValue(): void
