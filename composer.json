@@ -15,9 +15,13 @@
   "autoload": {
     "psr-4": {
       "Grachevko\\Enum\\": "src/",
-      "Grachevko\\Enum\\Tests\\": "tests/",
     },
     "exclude-from-classmap": ["/tests/"]
+  },
+  "autoload-dev": {
+      "psr-4": {
+          "Grachevko\\Enum\\Tests\\": "tests/"
+      }
   },
   "require-dev": {
     "phpunit/phpunit": "^8.2.1",
