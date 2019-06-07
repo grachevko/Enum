@@ -197,7 +197,7 @@ abstract class Enum implements Serializable
     {
         $all = array_values(self::getReflection()->getConstants());
 
-        if (!$ids) {
+        if ([] === $ids) {
             $ids = $all;
         } else {
             $ids = $reverse ? array_diff($all, $ids) : $ids;
