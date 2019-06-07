@@ -1,7 +1,7 @@
 all: cs phpstan phpunit
 
 phpstan:
-	php vendor/bin/phpstan analyse --level 6 src tests
+	php vendor/bin/phpstan analyse
 
 phpunit:
 	php vendor/bin/phpunit
