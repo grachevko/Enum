@@ -2,9 +2,7 @@
 
 namespace Grachevko\Enum\Tests;
 
-use BadMethodCallException;
 use Grachevko\Enum\GenderEnum;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,20 +47,11 @@ class GenderEnumTest extends TestCase
         self::assertSame(GenderEnum::create(1), GenderEnum::male());
         self::assertSame(GenderEnum::create(2), GenderEnum::female());
         self::assertSame(GenderEnum::create(9), GenderEnum::unapplicable());
-
-        $this->expectException(BadMethodCallException::class);
-        self::throwException(GenderEnum::{'boom'}());
     }
 
     public function testEnumCall(): void
     {
         self::assertTrue(GenderEnum::male()->isMale());
         self::assertFalse(GenderEnum::female()->isMale());
-
-        $this->expectException(InvalidArgumentException::class);
-        self::throwException(GenderEnum::unapplicable()->{'isBoom'}());
-
-        $this->expectException(BadMethodCallException::class);
-        self::throwException(GenderEnum::unapplicable()->{'boom'}());
     }
 }

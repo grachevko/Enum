@@ -146,7 +146,7 @@ abstract class Enum implements Serializable
      *
      * @throws ReflectionException
      *
-     * @return Enum
+     * @return static
      */
     final public static function from(string $property, $value): self
     {
@@ -235,7 +235,7 @@ abstract class Enum implements Serializable
      */
     final public function eq(Enum $enum): bool
     {
-        return $this instanceof $enum && $enum->getId() === $this->getId();
+        return static::class === get_class($enum) && $enum->getId() === $this->getId();
     }
 
     /**

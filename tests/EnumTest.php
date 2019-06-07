@@ -18,11 +18,6 @@ final class EnumTest extends TestCase
         EmptyEnum::create(1);
     }
 
-    public function testInstantiation(): void
-    {
-        self::assertInstanceOf(Enum::class, TestEnum::one());
-    }
-
     public function testIntegerValue(): void
     {
         $this->expectException(LogicException::class);
@@ -75,13 +70,20 @@ final class EnumTest extends TestCase
 
         $unserialized = unserialize($serialized);
 
-        $this->assertInstanceOf(TestEnum::class, $unserialized);
-        $this->assertTrue($enum->eq($unserialized));
+        self::assertInstanceOf(TestEnum::class, $unserialized);
+        self::assertTrue($enum->eq($unserialized));
     }
 
     public function testFrom(): void
     {
-        self::assertInstanceOf(Enum::class, TestEnum::fromName('yo'));
+        self::assertSame('yo', TestEnum::fromName('yo')->getName());
+        self::assertSame('yo', TestEnum::from('name', 'yo')->getName());
+    }
+
+    public function testUndefinedMethod(): void
+    {
+        $this->expectException(\BadMethodCallException::class);
+        TestEnum::undefinedMethod();
     }
 }
 
@@ -91,22 +93,32 @@ final class EnumTest extends TestCase
  * @method string getDescription()
  * @method string getDescriptionTwo()
  * @method static self fromName(string $name)
+ * @method static self undefinedMethod()
  */
 class TestEnum extends Enum
 {
     private const ONE = 1;
     private const TWO = 2;
 
+    /**
+     * @var array
+     */
     private static $name = [
         self::ONE => 'yo',
         self::TWO => 'Double yo',
     ];
 
+    /**
+     * @var array
+     */
     private static $description = [
         self::ONE => 'This is a description for TestEnum::ONE',
         self::TWO => 'This is a description for TestEnum::TWO',
     ];
 
+    /**
+     * @var array
+     */
     private static $descriptionTwo = [
         self::ONE => 'This is two description for one',
         self::TWO => 'This is two description for two',
