@@ -15,7 +15,7 @@ final class EnumTest extends TestCase
     {
         $this->expectException(LogicException::class);
 
-        new EmptyEnum(1);
+        EmptyEnum::create(1);
     }
 
     public function testInstantiation(): void
@@ -27,14 +27,14 @@ final class EnumTest extends TestCase
     {
         $this->expectException(LogicException::class);
 
-        new StringValueEnum(1);
+        StringValueEnum::create(1);
     }
 
     public function testNameValue(): void
     {
         self::assertSame('yo', TestEnum::one()->getName());
-        self::assertSame('two', TestEnum::two()->getName());
-        self::assertSame('Two', TestEnum::two()->getReadableName());
+        self::assertSame('one', AnotherTestEnum::one()->getName());
+        self::assertSame('One', AnotherTestEnum::one()->getReadableName());
     }
 
     public function testCustomPropertyValue(): void
@@ -42,18 +42,11 @@ final class EnumTest extends TestCase
         self::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->getDescription());
     }
 
-    public function testCustomUndefinedValue(): void
-    {
-        $this->expectException(LogicException::class);
-
-        TestEnum::one()->getDescription();
-    }
-
     public function testAllMethod(): void
     {
-        self::assertEquals([TestEnum::one(), TestEnum::two()], TestEnum::all());
-        self::assertEquals([TestEnum::one()], TestEnum::all([TestEnum::ONE]));
-        self::assertEquals([TestEnum::two()], TestEnum::all([TestEnum::TWO]));
+        self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all());
+        self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()->getId()]));
+        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()->getId()]));
     }
 
     public function testReadableName(): void
@@ -66,20 +59,7 @@ final class EnumTest extends TestCase
 
     public function testCompositeCustomValue(): void
     {
-        self::assertEquals('This is two description for one', TestEnum::one()->getDescriptionTwo());
-    }
-
-    public function testPrivateConstants(): void
-    {
-        $enum = null;
-
-        try {
-            $enum = PrivateConstEnum::iAmPrivate();
-        } catch (\Throwable $e) {
-        }
-
-        self::assertInstanceOf(PrivateConstEnum::class, $enum);
-        self::assertTrue($enum->isIAmPrivate());
+        self::assertSame('This is two description for one', TestEnum::one()->getDescriptionTwo());
     }
 
     public function testMethodEq(): void
@@ -116,19 +96,22 @@ final class EnumTest extends TestCase
  */
 class TestEnum extends Enum
 {
-    public const ONE = 1;
-    public const TWO = 2;
+    private const ONE = 1;
+    private const TWO = 2;
 
     private static $name = [
         self::ONE => 'yo',
+        self::TWO => 'Double yo',
     ];
 
     private static $description = [
+        self::ONE => 'This is a description for TestEnum::ONE',
         self::TWO => 'This is a description for TestEnum::TWO',
     ];
 
     private static $descriptionTwo = [
         self::ONE => 'This is two description for one',
+        self::TWO => 'This is two description for two',
     ];
 }
 
@@ -137,7 +120,7 @@ class TestEnum extends Enum
  */
 class AnotherTestEnum extends Enum
 {
-    public const ONE = 1;
+    private const ONE = 1;
 }
 
 class EmptyEnum extends Enum
@@ -146,8 +129,8 @@ class EmptyEnum extends Enum
 
 class StringValueEnum extends Enum
 {
-    public const ONE = 1;
-    public const WRONG_VALUE = 'string';
+    private const ONE = 1;
+    private const WRONG_VALUE = 'string';
 }
 
 /**
@@ -155,7 +138,7 @@ class StringValueEnum extends Enum
  */
 class ReadableEnum extends Enum
 {
-    public const ROLE_ADMIN = 1;
+    private const ROLE_ADMIN = 1;
 }
 
 /**

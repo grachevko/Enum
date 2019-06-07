@@ -14,14 +14,10 @@ class GenderEnumTest extends TestCase
 {
     public function testEnumStringArg(): void
     {
-        self::assertSame(1, (new GenderEnum(1))->getId());
-    }
+        /** @var int $id */
+        $id = '1';
 
-    public function testEnumEmptyClass(): void
-    {
-        $this->expectException(\LogicException::class);
-
-        new EmptyEnum(10);
+        self::assertSame(1, GenderEnum::create($id)->getId());
     }
 
     public function testEnumIsMale(): void
@@ -46,15 +42,15 @@ class GenderEnumTest extends TestCase
 
     public function testEnumToArray(): void
     {
-        self::assertEquals([GenderEnum::male()->getId() => GenderEnum::male()], GenderEnum::male()->toArray());
+        self::assertSame([GenderEnum::male()->getId() => GenderEnum::male()], GenderEnum::male()->toArray());
     }
 
     public function testEnumCallStatic(): void
     {
-        self::assertEquals(new GenderEnum(0), GenderEnum::unknown());
-        self::assertEquals(new GenderEnum(1), GenderEnum::male());
-        self::assertEquals(new GenderEnum(2), GenderEnum::female());
-        self::assertEquals(new GenderEnum(9), GenderEnum::unapplicable());
+        self::assertSame(GenderEnum::create(0), GenderEnum::unknown());
+        self::assertSame(GenderEnum::create(1), GenderEnum::male());
+        self::assertSame(GenderEnum::create(2), GenderEnum::female());
+        self::assertSame(GenderEnum::create(9), GenderEnum::unapplicable());
 
         $this->expectException(BadMethodCallException::class);
         self::throwException(GenderEnum::{'boom'}());

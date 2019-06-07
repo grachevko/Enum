@@ -3,14 +3,20 @@
 namespace Grachevko\Enum;
 
 use BadMethodCallException;
+use function in_array;
 use InvalidArgumentException;
+use function is_int;
 use LogicException;
 use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
+use Serializable;
+use function strlen;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-abstract class Enum implements \Serializable
+abstract class Enum implements Serializable
 {
     /**
      * @var int
@@ -23,13 +29,24 @@ abstract class Enum implements \Serializable
     private static $reflections = [];
 
     /**
+     * @var ReflectionProperty[][]
+     */
+    private static $properties = [];
+
+    /**
+     * @var Enum[][]
+     */
+    private static $instances = [];
+
+    /**
      * @param int $id
      *
      * @throws InvalidArgumentException
+     * @throws ReflectionException
      */
-    public function __construct(int $id)
+    private function __construct(int $id)
     {
-        if (!\in_array($id, self::getReflection()->getConstants(), true)) {
+        if (!in_array($id, self::getReflection()->getConstants(), true)) {
             throw new InvalidArgumentException(sprintf('Undefined enum "%s" of class "%s"', $id, static::class));
         }
 
@@ -39,7 +56,7 @@ abstract class Enum implements \Serializable
     /**
      * @return string
      */
-    public function __toString(): string
+    final public function __toString(): string
     {
         return (string) $this->getId();
     }
@@ -48,42 +65,37 @@ abstract class Enum implements \Serializable
      * @param string $name
      * @param array  $arguments
      *
-     * @throws BadMethodCallException
+     * @throws ReflectionException
      * @throws InvalidArgumentException
-     * @throws LogicException
+     * @throws BadMethodCallException
      *
      * @return bool|string
      */
-    public function __call(string $name, array $arguments)
+    final public function __call(string $name, array $arguments)
     {
-        $id = $this->getId();
-        $reflectionClass = self::getReflection();
-        $constants = $reflectionClass->getConstants();
+        $reflection = self::getReflection();
 
         if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
-            $const = Utils::stringToConstant(substr($name, 2, \strlen($name)));
+            $const = Utils::stringToConstant(substr($name, 2, strlen($name)));
 
-            if (!array_key_exists($const, $constants)) {
-                throw new InvalidArgumentException(sprintf(
-                        'Undefined constant "%s" in class "%s" to use method "%s"', $const, static::class, $name)
+            if (!$reflection->hasConstant($const)) {
+                throw new InvalidArgumentException(
+                    sprintf('Undefined constant "%s" or method "%s" in class "%s"', $const, $name, static::class)
                 );
             }
 
-            return $this->eq(new static($constants[$const]));
+            return $this->eq(static::create($reflection->getConstant($const)));
         }
 
+        $property = lcfirst(substr($name, 3));
         if (0 === strpos($name, 'get') && ctype_upper($name[3])) {
-            $property = lcfirst(substr($name, 3));
-
-            if ($value = $this->getPropertyValue($property)) {
-                return $value;
+            if (!$reflection->hasProperty($property)) {
+                throw new InvalidArgumentException(
+                    sprintf('Undefined property "%s" or method "%s" in class "%s"', $property, $name, static::class)
+                );
             }
 
-            throw new LogicException(sprintf(
-                'Undefined value in property "%s" for "%s" constant',
-                $property,
-                array_flip($constants)[$id]
-            ));
+            return $this->get($property);
         }
 
         throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
@@ -93,12 +105,13 @@ abstract class Enum implements \Serializable
      * @param string $name
      * @param array  $arguments
      *
+     * @throws ReflectionException
      * @throws BadMethodCallException
      * @throws LogicException
      *
      * @return static
      */
-    public static function __callStatic(string $name, array $arguments)
+    final public static function __callStatic(string $name, array $arguments)
     {
         $reflectionClass = self::getReflection();
 
@@ -106,49 +119,74 @@ abstract class Enum implements \Serializable
         $constants = $reflectionClass->getConstants();
 
         if (array_key_exists($const, $constants)) {
-            return new static($constants[$const]);
+            return static::create($constants[$const]);
         }
 
         if (0 === strpos($name, 'from') && ctype_upper($name[4])) {
-            $property = lcfirst(substr($name, 4));
-
-            $value = $arguments[0];
-            $values = array_flip(self::getProperty($property));
-            if (array_key_exists($value, $values)) {
-                return new static($values[$value]);
-            }
-
-            throw new LogicException(sprintf(
-                'Undefined value "%s" in property "%s"',
-                $value,
-                $property
-            ));
+            return static::from(lcfirst(substr($name, 4)), $arguments[0]);
         }
 
         throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
     }
 
     /**
+     * @param int $id
+     *
+     * @throws ReflectionException
+     *
+     * @return static
+     */
+    final public static function create(int $id): self
+    {
+        return self::$instances[static::class][$id] ?? self::$instances[static::class][$id] = new static($id);
+    }
+
+    /**
+     * @param string $property
+     * @param mixed  $value
+     *
+     * @throws ReflectionException
+     *
+     * @return Enum
+     */
+    final public static function from(string $property, $value): self
+    {
+        return static::create(array_flip(self::$properties[static::class][$property]->getValue())[$value]);
+    }
+
+    /**
      * @return int
      */
-    public function getId(): int
+    final public function getId(): int
     {
         return $this->id;
     }
 
     /**
+     * @throws ReflectionException
+     *
      * @return string
      */
-    public function getName(): string
+    final public function getName(): string
     {
-        return $this->getPropertyValue('name')
-            ?? strtolower(array_flip(self::getReflection()->getConstants())[$this->getId()]);
+        if (self::getReflection()->hasProperty('name')) {
+            return $this->get('name');
+        }
+
+        return strtolower(array_flip(self::getReflection()->getConstants())[$this->getId()]);
+    }
+
+    final public function get(string $property)
+    {
+        return self::$properties[static::class][$property]->getValue()[$this->getId()];
     }
 
     /**
+     * @throws ReflectionException
+     *
      * @return string
      */
-    public function getReadableName(): string
+    final public function getReadableName(): string
     {
         return mb_convert_case(str_replace('_', ' ', $this->getName()), MB_CASE_TITLE);
     }
@@ -157,9 +195,11 @@ abstract class Enum implements \Serializable
      * @param array $ids
      * @param bool  $reverse
      *
+     * @throws ReflectionException
+     *
      * @return array
      */
-    public static function all(array $ids = [], $reverse = false): array
+    final public static function all(array $ids = [], $reverse = false): array
     {
         $all = array_values(self::getReflection()->getConstants());
 
@@ -169,8 +209,8 @@ abstract class Enum implements \Serializable
             $ids = $reverse ? array_diff($all, $ids) : $ids;
         }
 
-        return array_map(function (int $id) {
-            return new static($id);
+        return array_map(static function (int $id) {
+            return static::create($id);
         }, $ids);
     }
 
@@ -179,9 +219,9 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function in(array $array): bool
+    final public function in(array $array): bool
     {
-        return \in_array($this->getId(), $array, true);
+        return in_array($this->getId(), $array, true);
     }
 
     /**
@@ -189,7 +229,7 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function is(int $id): bool
+    final public function is(int $id): bool
     {
         return $this->getId() === $id;
     }
@@ -199,7 +239,7 @@ abstract class Enum implements \Serializable
      *
      * @return bool
      */
-    public function eq(Enum $enum): bool
+    final public function eq(Enum $enum): bool
     {
         return $this instanceof $enum && $enum->getId() === $this->getId();
     }
@@ -207,7 +247,7 @@ abstract class Enum implements \Serializable
     /**
      * @return string
      */
-    public function serialize(): string
+    final public function serialize(): string
     {
         return (string) $this->getId();
     }
@@ -215,7 +255,7 @@ abstract class Enum implements \Serializable
     /**
      * @param string $serialized
      */
-    public function unserialize($serialized): void
+    final public function unserialize($serialized): void
     {
         $this->id = (int) $serialized;
     }
@@ -223,12 +263,13 @@ abstract class Enum implements \Serializable
     /**
      * @return array
      */
-    public function toArray(): array
+    final public function toArray(): array
     {
         return [$this->getId() => $this];
     }
 
     /**
+     * @throws ReflectionException
      * @throws LogicException
      *
      * @return ReflectionClass
@@ -241,42 +282,42 @@ abstract class Enum implements \Serializable
             return self::$reflections[$class];
         }
 
-        self::$reflections[$class] = $reflection = new ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
 
         $constants = $reflection->getConstants();
+
         if ([] === $constants) {
             throw new LogicException(sprintf('Class %s must define Constants', static::class));
         }
 
-        foreach ($constants as $value) {
-            if (!\is_int($value)) {
-                throw new LogicException('All enum constants must be in integer type');
+        foreach ($reflection->getReflectionConstants() as $reflectionConstant) {
+            if (false === $reflectionConstant->isPrivate()) {
+                throw new LogicException('All constants must be private by design.');
+            }
+
+            if (!is_int($reflectionConstant->getValue())) {
+                throw new LogicException('All enum constants must be type of integer by design.');
             }
         }
 
-        return $reflection;
-    }
+        foreach ($reflection->getProperties() as $property) {
+            $property->setAccessible(true);
 
-    private static function getProperty(string $property): array
-    {
-        $reflectionClass = self::getReflection();
+            self::$properties[static::class][$property->getName()] = $property;
 
-        $values = [];
-        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
-            if ($reflectionProperty->getName() === $property) {
-                $reflectionProperty->setAccessible(true);
-                $values = $reflectionProperty->getValue();
-                $reflectionProperty->setAccessible(false);
+            if ($property->isPublic()) {
+                throw new LogicException('All properties must be private or protected by design.');
+            }
 
-                break;
+            if (!$property->isStatic()) {
+                throw new LogicException('All properties must be static by design.');
+            }
+
+            if (array_values($constants) !== array_keys($property->getValue())) {
+                throw new LogicException('Properties must have values for all constants by design.');
             }
         }
 
-        return $values;
-    }
-
-    private function getPropertyValue(string $property)
-    {
-        return self::getProperty($property)[$this->getId()] ?? null;
+        return self::$reflections[$class] = $reflection;
     }
 }
