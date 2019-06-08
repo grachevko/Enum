@@ -191,9 +191,9 @@ abstract class Enum implements Serializable
      *
      * @throws ReflectionException
      *
-     * @return array
+     * @return static[]
      */
-    final public static function all(array $ids = [], $reverse = false): array
+    final public static function all(array $ids = [], bool $reverse = false): array
     {
         $all = array_values(self::getReflection()->getConstants());
 
