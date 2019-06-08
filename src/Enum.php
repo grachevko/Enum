@@ -86,8 +86,9 @@ abstract class Enum implements Serializable
             return $this->eq(static::create($reflection->getConstant($const)));
         }
 
-        $property = lcfirst(substr($name, 3));
         if (0 === strpos($name, 'get') && ctype_upper($name[3])) {
+            $property = lcfirst(substr($name, 3));
+
             if (!$reflection->hasProperty($property)) {
                 throw new InvalidArgumentException(
                     sprintf('Undefined property "%s" or method "%s" in class "%s"', $property, $name, static::class)
