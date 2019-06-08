@@ -183,6 +183,12 @@ abstract class Enum implements Serializable
      */
     final public function get(string $property)
     {
+        if (!array_key_exists($property, self::$properties[static::class])) {
+            throw new InvalidArgumentException(
+                sprintf('Property "%s" not exist at class "%s"', $property, static::class)
+            );
+        }
+
         return self::$properties[static::class][$property]->getValue()[$this->getId()];
     }
 

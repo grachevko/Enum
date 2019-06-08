@@ -2,7 +2,9 @@
 
 namespace Grachevko\Enum\Tests;
 
+use BadMethodCallException;
 use Grachevko\Enum\Enum;
+use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 
@@ -29,6 +31,15 @@ final class EnumTest extends TestCase
     {
         self::assertSame('yo', TestEnum::one()->getName());
         self::assertSame('one', AnotherTestEnum::one()->getName());
+    }
+
+    public function testGet(): void
+    {
+        self::assertSame('yo', TestEnum::one()->get('name'));
+        self::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->get('description'));
+
+        $this->expectException(InvalidArgumentException::class);
+        TestEnum::two()->get('undefined_property');
     }
 
     public function testCustomPropertyValue(): void
@@ -82,7 +93,7 @@ final class EnumTest extends TestCase
 
     public function testUndefinedMethod(): void
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         TestEnum::undefinedMethod();
     }
 }
