@@ -75,7 +75,7 @@ abstract class Enum implements Serializable
         $reflection = self::getReflection();
 
         if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
-            $const = Utils::stringToConstant(substr($name, 2));
+            $const = self::stringToConstant(substr($name, 2));
 
             if (!$reflection->hasConstant($const)) {
                 throw new InvalidArgumentException(
@@ -115,7 +115,7 @@ abstract class Enum implements Serializable
     {
         $reflectionClass = self::getReflection();
 
-        $const = Utils::stringToConstant($name);
+        $const = self::stringToConstant($name);
         $constants = $reflectionClass->getConstants();
 
         if (array_key_exists($const, $constants)) {
@@ -267,6 +267,24 @@ abstract class Enum implements Serializable
     final public function toArray(): array
     {
         return [$this->getId() => $this];
+    }
+
+    /**
+     * @param string $string
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return string
+     */
+    private static function stringToConstant(string $string): string
+    {
+        $constant = preg_replace('/\B([A-Z])/', '_$1', $string);
+
+        if (null === $constant) {
+            throw new InvalidArgumentException(sprintf('preg_replace return null for string "%s"', $string));
+        }
+
+        return strtoupper($constant);
     }
 
     /**
