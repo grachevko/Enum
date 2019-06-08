@@ -272,12 +272,18 @@ abstract class Enum implements Serializable
     {
         $class = static::class;
 
-        if (array_key_exists($class, self::$reflections)) {
-            return self::$reflections[$class];
-        }
+        return self::$reflections[$class] ?? self::$reflections[$class] = self::validate(new ReflectionClass($class));
+    }
 
-        $reflection = new ReflectionClass($class);
-
+    /**
+     * @param ReflectionClass $reflection
+     *
+     * @throws LogicException
+     *
+     * @return ReflectionClass
+     */
+    private static function validate(ReflectionClass $reflection): ReflectionClass
+    {
         $constants = $reflection->getConstants();
 
         if ([] === $constants) {
@@ -312,6 +318,6 @@ abstract class Enum implements Serializable
             }
         }
 
-        return self::$reflections[$class] = $reflection;
+        return $reflection;
     }
 }
