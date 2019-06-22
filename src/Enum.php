@@ -206,26 +206,6 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param array $array
-     *
-     * @return bool
-     */
-    final public function in(array $array): bool
-    {
-        return in_array($this->getId(), $array, true);
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return bool
-     */
-    final public function is(int $id): bool
-    {
-        return $this->getId() === $id;
-    }
-
-    /**
      * @param Enum $enum
      *
      * @return bool
