@@ -46,7 +46,9 @@ abstract class Enum implements Serializable
     private function __construct(int $id)
     {
         if (!in_array($id, self::getReflection()->getConstants(), true)) {
-            throw new InvalidArgumentException(sprintf('Undefined enum "%s" of class "%s"', $id, static::class));
+            throw new InvalidArgumentException(
+                sprintf('Undefined enum "%s" of class "%s"', $id, static::class)
+            );
         }
 
         $this->id = $id;
@@ -82,7 +84,9 @@ abstract class Enum implements Serializable
             return $this->get(lcfirst(substr($name, 3)));
         }
 
-        throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
+        throw new BadMethodCallException(
+            sprintf('Undefined method "%s" in class "%s"', $name, static::class)
+        );
     }
 
     /**
@@ -110,7 +114,9 @@ abstract class Enum implements Serializable
             return static::from(lcfirst(substr($name, 4)), $arguments[0]);
         }
 
-        throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
+        throw new BadMethodCallException(
+            sprintf('Undefined method "%s" in class "%s"', $name, static::class)
+        );
     }
 
     /**
