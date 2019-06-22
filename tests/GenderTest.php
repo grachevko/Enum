@@ -2,25 +2,25 @@
 
 namespace Grachevko\Enum\Tests;
 
-use Grachevko\Enum\GenderEnum;
+use Grachevko\Enum\Gender;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class GenderEnumTest extends TestCase
+class GenderTest extends TestCase
 {
     public function testEnumStringArg(): void
     {
         /** @var int $id */
         $id = '1';
 
-        self::assertSame(1, GenderEnum::create($id)->getId());
+        self::assertSame(1, Gender::create($id)->getId());
     }
 
     public function testEnumIsMale(): void
     {
-        $male = GenderEnum::male();
+        $male = Gender::male();
         self::assertTrue($male->isMale());
         self::assertFalse($male->isFemale());
         self::assertFalse($male->isUnapplicable());
@@ -29,7 +29,7 @@ class GenderEnumTest extends TestCase
 
     public function testEnumIsFemale(): void
     {
-        $female = GenderEnum::female();
+        $female = Gender::female();
         self::assertTrue($female->isFemale());
         self::assertFalse($female->isMale());
         self::assertFalse($female->isUnapplicable());
@@ -38,20 +38,20 @@ class GenderEnumTest extends TestCase
 
     public function testEnumToArray(): void
     {
-        self::assertSame([GenderEnum::male()->getId() => GenderEnum::male()], GenderEnum::male()->toArray());
+        self::assertSame([Gender::male()->getId() => Gender::male()], Gender::male()->toArray());
     }
 
     public function testEnumCallStatic(): void
     {
-        self::assertSame(GenderEnum::create(0), GenderEnum::unknown());
-        self::assertSame(GenderEnum::create(1), GenderEnum::male());
-        self::assertSame(GenderEnum::create(2), GenderEnum::female());
-        self::assertSame(GenderEnum::create(9), GenderEnum::unapplicable());
+        self::assertSame(Gender::create(0), Gender::unknown());
+        self::assertSame(Gender::create(1), Gender::male());
+        self::assertSame(Gender::create(2), Gender::female());
+        self::assertSame(Gender::create(9), Gender::unapplicable());
     }
 
     public function testEnumCall(): void
     {
-        self::assertTrue(GenderEnum::male()->isMale());
-        self::assertFalse(GenderEnum::female()->isMale());
+        self::assertTrue(Gender::male()->isMale());
+        self::assertFalse(Gender::female()->isMale());
     }
 }
