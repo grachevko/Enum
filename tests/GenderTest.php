@@ -36,11 +36,6 @@ class GenderTest extends TestCase
         self::assertSame('female', $female->getName());
     }
 
-    public function testEnumToArray(): void
-    {
-        self::assertSame([Gender::male()->getId() => Gender::male()], Gender::male()->toArray());
-    }
-
     public function testEnumCallStatic(): void
     {
         self::assertSame(Gender::create(0), Gender::unknown());

@@ -252,14 +252,6 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @return array
-     */
-    final public function toArray(): array
-    {
-        return [$this->getId() => $this];
-    }
-
-    /**
      * @param string $string
      *
      * @throws InvalidArgumentException
