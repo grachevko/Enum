@@ -287,7 +287,7 @@ abstract class Enum implements Serializable
             }
 
             if (!is_int($reflectionConstant->getValue())) {
-                throw new LogicException('All enum constants must be type of integer by design.');
+                throw new LogicException('All constants must be type of integer by design.');
             }
         }
 
