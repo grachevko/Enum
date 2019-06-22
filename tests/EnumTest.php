@@ -52,6 +52,8 @@ final class EnumTest extends TestCase
         self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all());
         self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()->getId()]));
         self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()->getId()]));
+        self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
+        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));
     }
 
     public function testReadableName(): void
