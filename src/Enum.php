@@ -75,27 +75,11 @@ abstract class Enum implements Serializable
         $reflection = self::getReflection();
 
         if (0 === strpos($name, 'is') && ctype_upper($name[2])) {
-            $const = self::stringToConstant(substr($name, 2));
-
-            if (!$reflection->hasConstant($const)) {
-                throw new InvalidArgumentException(
-                    sprintf('Undefined constant "%s" or method "%s" in class "%s"', $const, $name, static::class)
-                );
-            }
-
-            return $this->eq(static::create($reflection->getConstant($const)));
+            return $this->eq(static::create($reflection->getConstant(self::stringToConstant(substr($name, 2)))));
         }
 
         if (0 === strpos($name, 'get') && ctype_upper($name[3])) {
-            $property = lcfirst(substr($name, 3));
-
-            if (!$reflection->hasProperty($property)) {
-                throw new InvalidArgumentException(
-                    sprintf('Undefined property "%s" or method "%s" in class "%s"', $property, $name, static::class)
-                );
-            }
-
-            return $this->get($property);
+            return $this->get(lcfirst(substr($name, 3)));
         }
 
         throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
