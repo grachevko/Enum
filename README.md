@@ -21,11 +21,11 @@ namespace Grachevko\Enum;
 /**
  * @method static DriveWheel front()
  * @method static DriveWheel rear()
- * @method static DriveWheel all()
+ * @method static DriveWheel allDrive()
  * @method static DriveWheel fromCode(string $code)
  * @method bool   isFront()
  * @method bool   isRear()
- * @method bool   isAll()
+ * @method bool   isAllDrive()
  * @method string getCode()
  */
 final class DriveWheel extends Enum
