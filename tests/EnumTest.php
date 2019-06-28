@@ -50,8 +50,10 @@ final class EnumTest extends TestCase
     public function testAllMethod(): void
     {
         self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all());
-        self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()->getId()]));
-        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()->getId()]));
+        self::assertSame([TestEnum::one()], TestEnum::all([1]));
+        self::assertSame([TestEnum::two()], TestEnum::all([2]));
+        self::assertSame([TestEnum::one()], TestEnum::all(['1']));
+        self::assertSame([TestEnum::two()], TestEnum::all(['2']));
         self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
         self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));
     }

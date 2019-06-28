@@ -183,8 +183,8 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param Enum[]|int[] $ids
-     * @param bool         $reverse
+     * @param Enum[]|int[]|string[] $ids
+     * @param bool                  $reverse
      *
      * @throws ReflectionException
      *
@@ -193,7 +193,7 @@ abstract class Enum implements Serializable
     final public static function all(array $ids = [], bool $reverse = false): array
     {
         $ids = array_map(static function ($id) {
-            return $id instanceof Enum ? $id->getId() : $id;
+            return $id instanceof Enum ? $id->getId() : (int) $id;
         }, $ids);
 
         $all = array_values(self::getReflection()->getConstants());
