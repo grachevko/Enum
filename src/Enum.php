@@ -2,6 +2,8 @@
 
 namespace Grachevko\Enum;
 
+use function array_keys;
+use function array_values;
 use BadMethodCallException;
 use function in_array;
 use InvalidArgumentException;
@@ -11,6 +13,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 use Serializable;
+use function sprintf;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -169,6 +172,8 @@ abstract class Enum implements Serializable
     /**
      * @param string $property
      *
+     * @throws InvalidArgumentException
+     *
      * @return mixed
      */
     final public function get(string $property)
@@ -283,11 +288,19 @@ abstract class Enum implements Serializable
 
         foreach ($reflection->getReflectionConstants() as $reflectionConstant) {
             if (false === $reflectionConstant->isPrivate()) {
-                throw new LogicException('All constants must be private by design.');
+                throw new LogicException(sprintf(
+                    'Constant "%s" of class "%s" must be private by design.',
+                    $reflectionConstant->getName(),
+                    static::class,
+                    ));
             }
 
             if (!is_int($reflectionConstant->getValue())) {
-                throw new LogicException('All constants must be type of integer by design.');
+                throw new LogicException(sprintf(
+                    'Constants "%s" of class "%s" must be type of integer by design.',
+                    $reflectionConstant->getName(),
+                    static::class,
+                    ));
             }
         }
 
@@ -297,15 +310,27 @@ abstract class Enum implements Serializable
             self::$properties[static::class][$property->getName()] = $property;
 
             if ($property->isPublic()) {
-                throw new LogicException('All properties must be private or protected by design.');
+                throw new LogicException(sprintf(
+                    'Property "%s" of class "%s" must be private or protected by design.',
+                    $property->getName(),
+                    static::class,
+                    ));
             }
 
             if (!$property->isStatic()) {
-                throw new LogicException('All properties must be static by design.');
+                throw new LogicException(sprintf(
+                    'Property "%s" of class "%s" must be static by design.',
+                    $property->getName(),
+                    static::class,
+                    ));
             }
 
             if (array_values($constants) !== array_keys($property->getValue())) {
-                throw new LogicException('Properties must have values for all constants by design.');
+                throw new LogicException(sprintf(
+                    'Property "%s" of class "%s" must have values for all constants by design.',
+                    $property->getName(),
+                    static::class
+                ));
             }
         }
 
