@@ -1,9 +1,9 @@
 <?php
 
-namespace Grachevko\Enum\Tests;
+namespace Premier\Enum\Tests;
 
 use BadMethodCallException;
-use Grachevko\Enum\Enum;
+use Premier\Enum\Enum;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;

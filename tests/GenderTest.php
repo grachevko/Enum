@@ -1,8 +1,8 @@
 <?php
 
-namespace Grachevko\Enum\Tests;
+namespace Premier\Enum\Tests;
 
-use Grachevko\Enum\Gender;
+use Premier\Enum\Gender;
 use PHPUnit\Framework\TestCase;
 
 /**

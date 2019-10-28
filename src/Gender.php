@@ -1,6 +1,6 @@
 <?php
 
-namespace Grachevko\Enum;
+namespace Premier\Enum;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>

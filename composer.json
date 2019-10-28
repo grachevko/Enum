@@ -1,5 +1,5 @@
 {
-  "name": "grachevko/enum",
+  "name": "premier/enum",
   "type": "library",
   "description": "PHP Enum implementation",
   "keywords": ["enum"],
@@ -16,13 +16,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Grachevko\\Enum\\": "src/"
+      "Premier\\Enum\\": "src/"
     },
     "exclude-from-classmap": ["/tests/"]
   },
   "autoload-dev": {
       "psr-4": {
-          "Grachevko\\Enum\\Tests\\": "tests/"
+          "Premier\\Enum\\Tests\\": "tests/"
       }
   },
   "require-dev": {

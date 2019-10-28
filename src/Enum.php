@@ -1,6 +1,6 @@
 <?php
 
-namespace Grachevko\Enum;
+namespace Premier\Enum;
 
 use function array_keys;
 use function array_values;
