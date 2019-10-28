@@ -16,7 +16,7 @@ composer require grachevko/enum
 ## Usage
 
 ```php
-namespace Grachevko\Enum;
+namespace Premier\Enum;
 
 /**
  * @method static DriveWheel front()
