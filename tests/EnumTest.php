@@ -3,10 +3,10 @@
 namespace Premier\Enum\Tests;
 
 use BadMethodCallException;
-use Premier\Enum\Enum;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use Premier\Enum\Enum;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>

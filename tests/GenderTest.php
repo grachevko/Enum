@@ -2,8 +2,8 @@
 
 namespace Premier\Enum\Tests;
 
-use Premier\Enum\Gender;
 use PHPUnit\Framework\TestCase;
+use Premier\Enum\Gender;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>

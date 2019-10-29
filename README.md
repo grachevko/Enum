@@ -10,7 +10,7 @@
 ## Installation
 
 ```
-composer require grachevko/enum
+composer require premier/enum
 ```
 
 ## Usage

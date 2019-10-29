@@ -21,5 +21,7 @@
     <issueHandlers>
         <PossiblyFalseArgument errorLevel="info"/>
         <PropertyNotSetInConstructor errorLevel="info"/>
+        <InternalMethod errorLevel="info"/>
+        <DocblockTypeContradiction errorLevel="info"/>
     </issueHandlers>
 </psalm>
