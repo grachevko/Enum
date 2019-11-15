@@ -40,6 +40,9 @@ final class EnumTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         TestEnum::two()->get('undefined_property');
+
+        self::assertSame(1, TestEnum::one()->get('id'));
+        self::assertSame(2, TestEnum::one()->get('id'));
     }
 
     public function testCustomPropertyValue(): void

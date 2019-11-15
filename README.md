@@ -60,8 +60,9 @@ DriveWheel::all($ids); // [DriveWheel::front(), DriveWheel::rear()]
 DriveWheel::all($ids, $reverse = true); // [DriveWheel::allDrive()]
 
 // Methods
-$drive->getId(); // 1
-(string) $drive; // '1'
+$drive->getId();   // 1
+$drive->get('id'); // 1
+(string) $drive;   // '1'
 
 $drive->getName(); // 'front'
 
