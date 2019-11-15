@@ -163,29 +163,29 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param Enum[]|int[]|string[] $ids
+     * @param int[]|string[] $values
      *
      * @throws ReflectionException
      *
      * @return static[]
      */
-    final public static function all(array $ids = [], bool $reverse = false): array
+    final public static function all(array $values = [], bool $reverse = false, string $property = 'id'): array
     {
-        $ids = array_map(static function ($id) {
-            return $id instanceof Enum ? $id->getId() : (int) $id;
-        }, $ids);
-
-        $all = array_values(self::getReflection()->getConstants());
-
-        if ([] === $ids) {
-            $ids = $all;
+        if ('id' === $property) {
+            $all = array_values(self::getReflection()->getConstants());
         } else {
-            $ids = $reverse ? array_diff($all, $ids) : $ids;
+            $all = array_values(self::$properties[static::class][$property]->getValue());
         }
 
-        return array_map(static function (int $id) {
-            return static::create($id);
-        }, $ids);
+        if ([] === $values) {
+            $values = $all;
+        } else {
+            $values = $reverse ? array_values(array_diff($all, $values)) : $values;
+        }
+
+        return array_map(static function ($id) use ($property) {
+            return 'id' === $property ? static::create($id) : static::from($property, $id);
+        }, $values);
     }
 
     final public function eq(Enum $enum): bool

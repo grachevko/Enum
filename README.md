@@ -51,13 +51,9 @@ $drive = DriveWheel::fromCode('FWD');
 $drive = DriveWheel::from('code', 'FWD');
 
 // Array instances
-$ids = [1, 2];
-// or
-$ids = [DriveWheel::front(), DriveWheel::rear()];
-
 DriveWheel::all(); // [DriveWheel::front(), DriveWheel::rear(), DriveWheel::allDrive()]
-DriveWheel::all($ids); // [DriveWheel::front(), DriveWheel::rear()]
-DriveWheel::all($ids, $reverse = true); // [DriveWheel::allDrive()]
+DriveWheel::all(['FWD', 'RWD'], $reverse = false, $property = 'code'); // [DriveWheel::front(), DriveWheel::rear()]
+DriveWheel::all([1, 2], $reverse = true); // [DriveWheel::allDrive()]
 
 // Methods
 $drive->getId();   // 1

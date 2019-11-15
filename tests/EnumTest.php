@@ -56,9 +56,11 @@ final class EnumTest extends TestCase
         self::assertSame([TestEnum::one()], TestEnum::all([1]));
         self::assertSame([TestEnum::two()], TestEnum::all([2]));
         self::assertSame([TestEnum::one()], TestEnum::all(['1']));
-        self::assertSame([TestEnum::two()], TestEnum::all(['2']));
-        self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
-        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));
+        self::assertSame([TestEnum::two()], TestEnum::all(['1'], true));
+        self::assertSame([TestEnum::one()], TestEnum::all(['2'], true));
+
+        self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all(['uno', 'duo'], false, 'identifier'));
+        self::assertSame([TestEnum::two()], TestEnum::all(['uno'], true, 'identifier'));
     }
 
     public function testReadableName(): void
@@ -124,6 +126,14 @@ class TestEnum extends Enum
     private static $name = [
         self::ONE => 'yo',
         self::TWO => 'Double yo',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $identifier = [
+        self::ONE => 'uno',
+        self::TWO => 'duo',
     ];
 
     /**
