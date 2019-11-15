@@ -234,11 +234,8 @@ abstract class Enum implements Serializable
 
     private static function getReflectionProperty(string $property): ReflectionProperty
     {
+        self::getReflection();
         $class = static::class;
-
-        if ((self::$properties[$class][$property] ?? null) instanceof ReflectionProperty) {
-            self::getReflection();
-        }
 
         return self::$properties[$class][$property];
     }
