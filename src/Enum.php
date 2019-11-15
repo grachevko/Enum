@@ -41,34 +41,24 @@ abstract class Enum implements Serializable
     private static $instances = [];
 
     /**
-     * @param int $id
-     *
      * @throws InvalidArgumentException
      * @throws ReflectionException
      */
     private function __construct(int $id)
     {
         if (!in_array($id, self::getReflection()->getConstants(), true)) {
-            throw new InvalidArgumentException(
-                sprintf('Undefined enum "%s" of class "%s"', $id, static::class)
-            );
+            throw new InvalidArgumentException(sprintf('Undefined enum "%s" of class "%s"', $id, static::class));
         }
 
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     final public function __toString(): string
     {
         return (string) $this->getId();
     }
 
     /**
-     * @param string $name
-     * @param array  $arguments
-     *
      * @throws ReflectionException
      * @throws InvalidArgumentException
      * @throws BadMethodCallException
@@ -87,15 +77,10 @@ abstract class Enum implements Serializable
             return $this->get(lcfirst(substr($name, 3)));
         }
 
-        throw new BadMethodCallException(
-            sprintf('Undefined method "%s" in class "%s"', $name, static::class)
-        );
+        throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
     }
 
     /**
-     * @param string $name
-     * @param array  $arguments
-     *
      * @throws ReflectionException
      * @throws BadMethodCallException
      * @throws LogicException
@@ -117,14 +102,10 @@ abstract class Enum implements Serializable
             return static::from(lcfirst(substr($name, 4)), $arguments[0]);
         }
 
-        throw new BadMethodCallException(
-            sprintf('Undefined method "%s" in class "%s"', $name, static::class)
-        );
+        throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
     }
 
     /**
-     * @param int $id
-     *
      * @throws ReflectionException
      *
      * @return static
@@ -135,8 +116,7 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param string $property
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @throws ReflectionException
      *
@@ -147,9 +127,6 @@ abstract class Enum implements Serializable
         return static::create(array_flip(self::$properties[static::class][$property]->getValue())[$value]);
     }
 
-    /**
-     * @return int
-     */
     final public function getId(): int
     {
         return $this->id;
@@ -157,8 +134,6 @@ abstract class Enum implements Serializable
 
     /**
      * @throws ReflectionException
-     *
-     * @return string
      */
     final public function getName(): string
     {
@@ -170,8 +145,6 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param string $property
-     *
      * @throws InvalidArgumentException
      *
      * @return mixed
@@ -179,9 +152,7 @@ abstract class Enum implements Serializable
     final public function get(string $property)
     {
         if (!array_key_exists($property, self::$properties[static::class])) {
-            throw new InvalidArgumentException(
-                sprintf('Property "%s" not exist at class "%s"', $property, static::class)
-            );
+            throw new InvalidArgumentException(sprintf('Property "%s" not exist at class "%s"', $property, static::class));
         }
 
         return self::$properties[static::class][$property]->getValue()[$this->getId()];
@@ -189,7 +160,6 @@ abstract class Enum implements Serializable
 
     /**
      * @param Enum[]|int[]|string[] $ids
-     * @param bool                  $reverse
      *
      * @throws ReflectionException
      *
@@ -214,19 +184,11 @@ abstract class Enum implements Serializable
         }, $ids);
     }
 
-    /**
-     * @param Enum $enum
-     *
-     * @return bool
-     */
     final public function eq(Enum $enum): bool
     {
         return static::class === get_class($enum) && $enum->getId() === $this->getId();
     }
 
-    /**
-     * @return string
-     */
     final public function serialize(): string
     {
         return (string) $this->getId();
@@ -241,11 +203,7 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param string $string
-     *
      * @throws InvalidArgumentException
-     *
-     * @return string
      */
     private static function stringToConstant(string $string): string
     {
@@ -261,8 +219,6 @@ abstract class Enum implements Serializable
     /**
      * @throws ReflectionException
      * @throws LogicException
-     *
-     * @return ReflectionClass
      */
     private static function getReflection(): ReflectionClass
     {
@@ -272,11 +228,7 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param ReflectionClass $reflection
-     *
      * @throws LogicException
-     *
-     * @return ReflectionClass
      */
     private static function validate(ReflectionClass $reflection): ReflectionClass
     {
@@ -288,19 +240,11 @@ abstract class Enum implements Serializable
 
         foreach ($reflection->getReflectionConstants() as $reflectionConstant) {
             if (false === $reflectionConstant->isPrivate()) {
-                throw new LogicException(sprintf(
-                    'Constant "%s" of class "%s" must be private by design.',
-                    $reflectionConstant->getName(),
-                    static::class,
-                    ));
+                throw new LogicException(sprintf('Constant "%s" of class "%s" must be private by design.', $reflectionConstant->getName(), static::class, ));
             }
 
             if (!is_int($reflectionConstant->getValue())) {
-                throw new LogicException(sprintf(
-                    'Constants "%s" of class "%s" must be type of integer by design.',
-                    $reflectionConstant->getName(),
-                    static::class,
-                    ));
+                throw new LogicException(sprintf('Constants "%s" of class "%s" must be type of integer by design.', $reflectionConstant->getName(), static::class, ));
             }
         }
 
@@ -310,27 +254,15 @@ abstract class Enum implements Serializable
             self::$properties[static::class][$property->getName()] = $property;
 
             if ($property->isPublic()) {
-                throw new LogicException(sprintf(
-                    'Property "%s" of class "%s" must be private or protected by design.',
-                    $property->getName(),
-                    static::class,
-                    ));
+                throw new LogicException(sprintf('Property "%s" of class "%s" must be private or protected by design.', $property->getName(), static::class, ));
             }
 
             if (!$property->isStatic()) {
-                throw new LogicException(sprintf(
-                    'Property "%s" of class "%s" must be static by design.',
-                    $property->getName(),
-                    static::class,
-                    ));
+                throw new LogicException(sprintf('Property "%s" of class "%s" must be static by design.', $property->getName(), static::class, ));
             }
 
             if (array_values($constants) !== array_keys($property->getValue())) {
-                throw new LogicException(sprintf(
-                    'Property "%s" of class "%s" must have values for all constants by design.',
-                    $property->getName(),
-                    static::class
-                ));
+                throw new LogicException(sprintf('Property "%s" of class "%s" must have values for all constants by design.', $property->getName(), static::class));
             }
         }
 

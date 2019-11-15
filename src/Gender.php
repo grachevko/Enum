@@ -23,9 +23,6 @@ class Gender extends Enum
     private const FEMALE = 2;
     private const UNAPPLICABLE = 9;
 
-    /**
-     * @return bool
-     */
     public function isDefined(): bool
     {
         return in_array($this->getId(), [self::MALE, self::FEMALE], true);
