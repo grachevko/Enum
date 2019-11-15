@@ -1,6 +1,6 @@
 # PHP Enum implementation
 
-[![Latest Stable Version](https://poser.pugx.org/premier/enum/v/stable)](https://packagist.org/packages/premier/enum)enum)
+[![Latest Stable Version](https://poser.pugx.org/premier/enum/v/stable)](https://packagist.org/packages/premier/enum)
 [![Total Downloads](https://poser.pugx.org/premier/enum/downloads)](https://packagist.org/packages/premier/enum)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/grachevko/Enum/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/grachevko/Enum/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/grachevko/Enum/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/grachevko/Enum/?branch=master)
