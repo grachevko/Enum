@@ -124,7 +124,7 @@ abstract class Enum implements Serializable
      */
     final public static function from(string $property, $value): self
     {
-        return static::create(array_flip(self::$properties[static::class][$property]->getValue())[$value]);
+        return static::create(array_flip(self::getReflectionProperty($property)->getValue())[$value]);
     }
 
     final public function getId(): int
@@ -145,6 +145,7 @@ abstract class Enum implements Serializable
     }
 
     /**
+     * @throws ReflectionException
      * @throws InvalidArgumentException
      *
      * @return mixed
@@ -155,11 +156,11 @@ abstract class Enum implements Serializable
             return $this->id;
         }
 
-        if (!array_key_exists($property, self::$properties[static::class])) {
+        if (!self::getReflection()->hasProperty($property)) {
             throw new InvalidArgumentException(sprintf('Property "%s" not exist at class "%s"', $property, static::class));
         }
 
-        return self::$properties[static::class][$property]->getValue()[$this->getId()];
+        return self::getReflectionProperty($property)->getValue()[$this->getId()];
     }
 
     /**
@@ -174,7 +175,7 @@ abstract class Enum implements Serializable
         if ('id' === $property) {
             $all = array_values(self::getReflection()->getConstants());
         } else {
-            $all = array_values(self::$properties[static::class][$property]->getValue());
+            $all = array_values(self::getReflectionProperty($property)->getValue());
         }
 
         if ([] === $values) {
@@ -229,6 +230,17 @@ abstract class Enum implements Serializable
         $class = static::class;
 
         return self::$reflections[$class] ?? self::$reflections[$class] = self::validate(new ReflectionClass($class));
+    }
+
+    private static function getReflectionProperty(string $property): ReflectionProperty
+    {
+        $class = static::class;
+
+        if ((self::$properties[$class][$property] ?? null) instanceof ReflectionProperty) {
+            self::getReflection();
+        }
+
+        return self::$properties[$class][$property];
     }
 
     /**
