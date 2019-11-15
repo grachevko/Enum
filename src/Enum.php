@@ -164,7 +164,7 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @param int[]|string[] $values
+     * @param Enum[]|int[]|string[] $values
      *
      * @throws ReflectionException
      *
@@ -172,6 +172,10 @@ abstract class Enum implements Serializable
      */
     final public static function all(array $values = [], bool $reverse = false, string $property = 'id'): array
     {
+        $values = array_map(static function ($value) {
+            return $value instanceof Enum ? $value->getId() : $value;
+        }, $values);
+
         if ('id' === $property) {
             $all = array_values(self::getReflection()->getConstants());
         } else {

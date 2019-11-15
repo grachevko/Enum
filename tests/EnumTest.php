@@ -59,6 +59,10 @@ final class EnumTest extends TestCase
         self::assertSame([TestEnum::two()], TestEnum::all(['1'], true));
         self::assertSame([TestEnum::one()], TestEnum::all(['2'], true));
 
+        self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
+        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));
+        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::one()], true));
+
         self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all(['uno', 'duo'], false, 'identifier'));
         self::assertSame([TestEnum::two()], TestEnum::all(['uno'], true, 'identifier'));
     }
