@@ -2,18 +2,30 @@
 
 namespace Premier\Enum;
 
+use function array_diff;
+use function array_flip;
+use function array_key_exists;
 use function array_keys;
+use function array_map;
 use function array_values;
 use BadMethodCallException;
+use function ctype_upper;
+use function get_class;
 use function in_array;
 use InvalidArgumentException;
 use function is_int;
+use function lcfirst;
 use LogicException;
+use function preg_replace;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 use Serializable;
 use function sprintf;
+use function strpos;
+use function strtolower;
+use function strtoupper;
+use function substr;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -175,7 +187,7 @@ abstract class Enum implements Serializable
     final public static function all(array $values = [], bool $reverse = false, string $property = 'id'): array
     {
         $values = array_map(static function ($value) {
-            return $value instanceof Enum ? $value->getId() : $value;
+            return $value instanceof self ? $value->getId() : $value;
         }, $values);
 
         if ('id' === $property) {
@@ -195,7 +207,7 @@ abstract class Enum implements Serializable
         }, $values);
     }
 
-    final public function eq(Enum $enum): bool
+    final public function eq(self $enum): bool
     {
         return static::class === get_class($enum) && $enum->getId() === $this->getId();
     }

@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Premier\Enum\Doctrine;
 
+use function assert;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
+use function filter_var;
+use InvalidArgumentException;
+use function is_subclass_of;
 use Premier\Enum\Enum;
+use function sprintf;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -34,13 +39,13 @@ final class EnumType extends Type
      */
     public static function register(string $class, string $name, string $property = 'id'): void
     {
-        if (!\is_subclass_of($class, Enum::class, true)) {
-            throw new \InvalidArgumentException(\sprintf('%s is not child of %s', $class, Enum::class));
+        if (!is_subclass_of($class, Enum::class, true)) {
+            throw new InvalidArgumentException(sprintf('%s is not child of %s', $class, Enum::class));
         }
 
         Type::addType($name, self::class);
         $type = Type::getType($name);
-        \assert($type instanceof self);
+        assert($type instanceof self);
 
         $type->class = $class;
         $type->name = $name;
@@ -75,13 +80,13 @@ final class EnumType extends Type
 
         $class = $this->class;
         if ($value instanceof $class) {
-            \assert($value instanceof Enum);
+            assert($value instanceof Enum);
 
             return $value;
         }
 
         if ('id' === $this->property) {
-            if (false === $id = \filter_var($value, FILTER_VALIDATE_INT)) {
+            if (false === $id = filter_var($value, FILTER_VALIDATE_INT)) {
                 throw ConversionException::conversionFailed($value, $this->getName());
             }
 
@@ -96,7 +101,7 @@ final class EnumType extends Type
             throw ConversionException::conversionFailed($value, $this->getName());
         }
 
-        \assert($enum instanceof Enum);
+        assert($enum instanceof Enum);
 
         return $enum;
     }
@@ -115,7 +120,7 @@ final class EnumType extends Type
             throw ConversionException::conversionFailed($value, $this->getName());
         }
 
-        \assert($value instanceof Enum);
+        assert($value instanceof Enum);
 
         return $value->get($this->property);
     }
