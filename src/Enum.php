@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Premier\Enum;
 
 use function array_diff;

@@ -59,9 +59,6 @@ final class EnumTest extends TestCase
         static::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all());
         static::assertSame([TestEnum::one()], TestEnum::all([1]));
         static::assertSame([TestEnum::two()], TestEnum::all([2]));
-        static::assertSame([TestEnum::one()], TestEnum::all(['1']));
-        static::assertSame([TestEnum::two()], TestEnum::all(['1'], true));
-        static::assertSame([TestEnum::one()], TestEnum::all(['2'], true));
 
         static::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
         static::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));

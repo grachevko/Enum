@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Premier\Enum\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -10,14 +12,6 @@ use Premier\Enum\Gender;
  */
 class GenderTest extends TestCase
 {
-    public function testEnumStringArg(): void
-    {
-        /** @var int $id */
-        $id = '1';
-
-        static::assertSame(1, Gender::create($id)->getId());
-    }
-
     public function testEnumIsMale(): void
     {
         $male = Gender::male();

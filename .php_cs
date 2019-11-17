@@ -12,6 +12,7 @@ return PhpCsFixer\Config::create()
         '@Symfony'                              => true,
         '@Symfony:risky'                        => true,
         'array_syntax'                          => ['syntax' => 'short'],
+        'declare_strict_types'                  => true,
         'binary_operator_spaces'                => ['operators' => ['=>' => 'single_space']],
         'fopen_flags'                           => ['b_mode' => true],
         'fully_qualified_strict_types'          => true,
