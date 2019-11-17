@@ -203,7 +203,7 @@ abstract class Enum implements Serializable
         }
 
         return array_map(static function ($id) use ($property) {
-            return 'id' === $property ? static::create($id) : static::from($property, $id);
+            return static::from($property, $id);
         }, $values);
     }
 
