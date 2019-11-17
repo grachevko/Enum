@@ -102,6 +102,8 @@ final class EnumTest extends TestCase
     {
         self::assertSame('yo', TestEnum::fromName('yo')->getName());
         self::assertSame('yo', TestEnum::from('name', 'yo')->getName());
+
+        self::assertSame(TestEnum::one(), TestEnum::from('id', 1));
     }
 
     public function testUndefinedMethod(): void

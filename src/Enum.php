@@ -124,7 +124,9 @@ abstract class Enum implements Serializable
      */
     final public static function from(string $property, $value): self
     {
-        return static::create(array_flip(self::getReflectionProperty($property)->getValue())[$value]);
+        $id = 'id' === $property ? $value : array_flip(self::getReflectionProperty($property)->getValue())[$value];
+
+        return static::create($id);
     }
 
     final public function getId(): int
