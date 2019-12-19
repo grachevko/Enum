@@ -69,7 +69,7 @@ abstract class Enum implements Serializable
 
     final public function __toString(): string
     {
-        return (string) $this->getId();
+        return (string) $this->toId();
     }
 
     /**
@@ -87,8 +87,8 @@ abstract class Enum implements Serializable
             return $this->eq(static::create($reflection->getConstant(self::stringToConstant(substr($name, 2)))));
         }
 
-        if (0 === strpos($name, 'get') && ctype_upper($name[3])) {
-            return $this->get(lcfirst(substr($name, 3)));
+        if (0 === strpos($name, 'to') && ctype_upper($name[2])) {
+            return $this->to(lcfirst(substr($name, 2)));
         }
 
         throw new BadMethodCallException(sprintf('Undefined method "%s" in class "%s"', $name, static::class));
@@ -143,7 +143,7 @@ abstract class Enum implements Serializable
         return static::create($id);
     }
 
-    final public function getId(): int
+    final public function toId(): int
     {
         return $this->id;
     }
@@ -151,13 +151,13 @@ abstract class Enum implements Serializable
     /**
      * @throws ReflectionException
      */
-    final public function getName(): string
+    final public function toName(): string
     {
         if (self::getReflection()->hasProperty('name')) {
-            return $this->get('name');
+            return $this->to('name');
         }
 
-        return strtolower(array_flip(self::getReflection()->getConstants())[$this->getId()]);
+        return strtolower(array_flip(self::getReflection()->getConstants())[$this->toId()]);
     }
 
     /**
@@ -166,7 +166,7 @@ abstract class Enum implements Serializable
      *
      * @return mixed
      */
-    final public function get(string $property)
+    final public function to(string $property)
     {
         if ('id' === $property) {
             return $this->id;
@@ -176,7 +176,7 @@ abstract class Enum implements Serializable
             throw new InvalidArgumentException(sprintf('Property "%s" not exist at class "%s"', $property, static::class));
         }
 
-        return self::getReflectionProperty($property)->getValue()[$this->getId()];
+        return self::getReflectionProperty($property)->getValue()[$this->toId()];
     }
 
     /**
@@ -189,7 +189,7 @@ abstract class Enum implements Serializable
     final public static function all(array $values = [], bool $reverse = false, string $property = 'id'): array
     {
         $values = array_map(static function ($value) {
-            return $value instanceof self ? $value->getId() : $value;
+            return $value instanceof self ? $value->toId() : $value;
         }, $values);
 
         if ('id' === $property) {
@@ -211,12 +211,12 @@ abstract class Enum implements Serializable
 
     final public function eq(self $enum): bool
     {
-        return static::class === get_class($enum) && $enum->getId() === $this->getId();
+        return static::class === get_class($enum) && $enum->toId() === $this->toId();
     }
 
     final public function serialize(): string
     {
-        return (string) $this->getId();
+        return (string) $this->toId();
     }
 
     /**

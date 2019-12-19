@@ -122,7 +122,7 @@ final class EnumType extends Type
 
         assert($value instanceof Enum);
 
-        return $value->get($this->property);
+        return $value->to($this->property);
     }
 
     /**

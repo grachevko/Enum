@@ -18,7 +18,7 @@ class GenderTest extends TestCase
         static::assertTrue($male->isMale());
         static::assertFalse($male->isFemale());
         static::assertFalse($male->isUnapplicable());
-        static::assertSame('male', $male->getName());
+        static::assertSame('male', $male->toName());
     }
 
     public function testEnumIsFemale(): void
@@ -27,7 +27,7 @@ class GenderTest extends TestCase
         static::assertTrue($female->isFemale());
         static::assertFalse($female->isMale());
         static::assertFalse($female->isUnapplicable());
-        static::assertSame('female', $female->getName());
+        static::assertSame('female', $female->toName());
     }
 
     public function testEnumCallStatic(): void

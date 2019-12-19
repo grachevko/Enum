@@ -33,25 +33,25 @@ final class EnumTest extends TestCase
 
     public function testNameValue(): void
     {
-        static::assertSame('yo', TestEnum::one()->getName());
-        static::assertSame('one', AnotherTestEnum::one()->getName());
+        static::assertSame('yo', TestEnum::one()->toName());
+        static::assertSame('one', AnotherTestEnum::one()->toName());
     }
 
-    public function testGet(): void
+    public function testTo(): void
     {
-        static::assertSame('yo', TestEnum::one()->get('name'));
-        static::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->get('description'));
+        static::assertSame('yo', TestEnum::one()->to('name'));
+        static::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->to('description'));
 
         $this->expectException(InvalidArgumentException::class);
-        TestEnum::two()->get('undefined_property');
+        TestEnum::two()->to('undefined_property');
 
-        static::assertSame(1, TestEnum::one()->get('id'));
-        static::assertSame(2, TestEnum::one()->get('id'));
+        static::assertSame(1, TestEnum::one()->to('id'));
+        static::assertSame(2, TestEnum::one()->to('id'));
     }
 
     public function testCustomPropertyValue(): void
     {
-        static::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->getDescription());
+        static::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->toDescription());
     }
 
     public function testAllMethod(): void
@@ -72,12 +72,12 @@ final class EnumTest extends TestCase
     {
         $readableEnum = ReadableEnum::roleAdmin();
 
-        static::assertSame('role_admin', $readableEnum->getName());
+        static::assertSame('role_admin', $readableEnum->toName());
     }
 
     public function testCompositeCustomValue(): void
     {
-        static::assertSame('This is two description for one', TestEnum::one()->getDescriptionTwo());
+        static::assertSame('This is two description for one', TestEnum::one()->toDescriptionTwo());
     }
 
     public function testMethodEq(): void
@@ -101,8 +101,8 @@ final class EnumTest extends TestCase
 
     public function testFrom(): void
     {
-        static::assertSame('yo', TestEnum::fromName('yo')->getName());
-        static::assertSame('yo', TestEnum::from('name', 'yo')->getName());
+        static::assertSame('yo', TestEnum::fromName('yo')->toName());
+        static::assertSame('yo', TestEnum::from('name', 'yo')->toName());
 
         static::assertSame(TestEnum::one(), TestEnum::from('id', 1));
     }

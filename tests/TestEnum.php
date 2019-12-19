@@ -9,8 +9,8 @@ use Premier\Enum\Enum;
 /**
  * @method static TestEnum one()
  * @method static TestEnum two()
- * @method string getDescription()
- * @method string getDescriptionTwo()
+ * @method string toDescription()
+ * @method string toDescriptionTwo()
  * @method static self fromName(string $name)
  * @method static self undefinedMethod()
  */

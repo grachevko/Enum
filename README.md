@@ -26,7 +26,7 @@ namespace Premier\Enum;
  * @method bool   isFront()
  * @method bool   isRear()
  * @method bool   isAllDrive()
- * @method string getCode()
+ * @method string toCode()
  */
 final class DriveWheel extends Enum
 {
@@ -56,14 +56,14 @@ DriveWheel::all(['FWD', 'RWD'], $reverse = false, $property = 'code'); // [Drive
 DriveWheel::all([1, 2], $reverse = true); // [DriveWheel::allDrive()]
 
 // Methods
-$drive->getId();   // 1
-$drive->get('id'); // 1
+$drive->toId();    // 1
+$drive->to('id');  // 1
 (string) $drive;   // '1'
 
-$drive->getName(); // 'front'
+$drive->toName(); // 'front'
 
-$drive->getCode();   // 'FWD'
-$drive->get('code'); // 'FWD'
+$drive->toCode();   // 'FWD'
+$drive->to('code'); // 'FWD'
 
 $drive->isFront(); // true
 $drive->isRear();  // false

@@ -29,6 +29,6 @@ class Gender extends Enum
 
     public function isDefined(): bool
     {
-        return in_array($this->getId(), [self::MALE, self::FEMALE], true);
+        return in_array($this->toId(), [self::MALE, self::FEMALE], true);
     }
 }
