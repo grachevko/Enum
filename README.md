@@ -79,3 +79,21 @@ $drive->eq(DriveWheel::rear());  // false
 - All properties MUST NOT be public
 - All properties MUST be static
 - Properties MUST contain values for all defined constants
+
+## Doctrine
+
+This lib distributed with Type class for Doctrine to easy configure each Enum as Doctrine Type. 
+
+```php
+Premier\Enum\Doctrine\EnumType::register(Premier\Enum\Gender::class, 'gender_enum', $property = 'id');
+
+class Entity 
+{
+    /**
+    * @var Gender
+    * 
+    * @ORM\Column(type="gender_enum") 
+    */
+    public $gender;
+}
+```
