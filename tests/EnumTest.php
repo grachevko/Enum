@@ -33,58 +33,58 @@ final class EnumTest extends TestCase
 
     public function testNameValue(): void
     {
-        static::assertSame('yo', TestEnum::one()->toName());
-        static::assertSame('one', AnotherTestEnum::one()->toName());
+        self::assertSame('yo', TestEnum::one()->toName());
+        self::assertSame('one', AnotherTestEnum::one()->toName());
     }
 
     public function testTo(): void
     {
-        static::assertSame('yo', TestEnum::one()->to('name'));
-        static::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->to('description'));
+        self::assertSame('yo', TestEnum::one()->to('name'));
+        self::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->to('description'));
 
         $this->expectException(InvalidArgumentException::class);
         TestEnum::two()->to('undefined_property');
 
-        static::assertSame(1, TestEnum::one()->to('id'));
-        static::assertSame(2, TestEnum::one()->to('id'));
+        self::assertSame(1, TestEnum::one()->to('id'));
+        self::assertSame(2, TestEnum::one()->to('id'));
     }
 
     public function testCustomPropertyValue(): void
     {
-        static::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->toDescription());
+        self::assertSame('This is a description for TestEnum::TWO', TestEnum::two()->toDescription());
     }
 
     public function testAllMethod(): void
     {
-        static::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all());
-        static::assertSame([TestEnum::one()], TestEnum::all([1]));
-        static::assertSame([TestEnum::two()], TestEnum::all([2]));
+        self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all());
+        self::assertSame([TestEnum::one()], TestEnum::all([1]));
+        self::assertSame([TestEnum::two()], TestEnum::all([2]));
 
-        static::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
-        static::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));
-        static::assertSame([TestEnum::two()], TestEnum::all([TestEnum::one()], true));
+        self::assertSame([TestEnum::one()], TestEnum::all([TestEnum::one()]));
+        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::two()]));
+        self::assertSame([TestEnum::two()], TestEnum::all([TestEnum::one()], true));
 
-        static::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all(['uno', 'duo'], false, 'identifier'));
-        static::assertSame([TestEnum::two()], TestEnum::all(['uno'], true, 'identifier'));
+        self::assertSame([TestEnum::one(), TestEnum::two()], TestEnum::all(['uno', 'duo'], false, 'identifier'));
+        self::assertSame([TestEnum::two()], TestEnum::all(['uno'], true, 'identifier'));
     }
 
     public function testReadableName(): void
     {
         $readableEnum = ReadableEnum::roleAdmin();
 
-        static::assertSame('role_admin', $readableEnum->toName());
+        self::assertSame('role_admin', $readableEnum->toName());
     }
 
     public function testCompositeCustomValue(): void
     {
-        static::assertSame('This is two description for one', TestEnum::one()->toDescriptionTwo());
+        self::assertSame('This is two description for one', TestEnum::one()->toDescriptionTwo());
     }
 
     public function testMethodEq(): void
     {
-        static::assertTrue(TestEnum::one()->eq(TestEnum::one()));
-        static::assertFalse(TestEnum::one()->eq(TestEnum::two()));
-        static::assertFalse(TestEnum::one()->eq(AnotherTestEnum::one()));
+        self::assertTrue(TestEnum::one()->eq(TestEnum::one()));
+        self::assertFalse(TestEnum::one()->eq(TestEnum::two()));
+        self::assertFalse(TestEnum::one()->eq(AnotherTestEnum::one()));
     }
 
     public function testSerialization(): void
@@ -95,16 +95,16 @@ final class EnumTest extends TestCase
 
         $unserialized = unserialize($serialized);
 
-        static::assertInstanceOf(TestEnum::class, $unserialized);
-        static::assertTrue($enum->eq($unserialized));
+        self::assertInstanceOf(TestEnum::class, $unserialized);
+        self::assertTrue($enum->eq($unserialized));
     }
 
     public function testFrom(): void
     {
-        static::assertSame('yo', TestEnum::fromName('yo')->toName());
-        static::assertSame('yo', TestEnum::from('name', 'yo')->toName());
+        self::assertSame('yo', TestEnum::fromName('yo')->toName());
+        self::assertSame('yo', TestEnum::from('name', 'yo')->toName());
 
-        static::assertSame(TestEnum::one(), TestEnum::from('id', 1));
+        self::assertSame(TestEnum::one(), TestEnum::from('id', 1));
     }
 
     public function testUndefinedMethod(): void

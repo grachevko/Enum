@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Premier\Enum\Doctrine;
 
-use function assert;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
-use function filter_var;
 use InvalidArgumentException;
-use function is_subclass_of;
 use Premier\Enum\Enum;
+use function assert;
+use function filter_var;
+use function is_subclass_of;
 use function sprintf;
 
 /**
@@ -60,13 +60,13 @@ final class EnumType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         if ('id' === $this->property) {
-            return $platform->getSmallIntTypeDeclarationSQL($fieldDeclaration);
+            return $platform->getSmallIntTypeDeclarationSQL($column);
         }
 
-        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
+        return $platform->getVarcharTypeDeclarationSQL($column);
     }
 
     /**
@@ -79,6 +79,7 @@ final class EnumType extends Type
         }
 
         $class = $this->class;
+
         if ($value instanceof $class) {
             assert($value instanceof Enum);
 
@@ -116,6 +117,7 @@ final class EnumType extends Type
         }
 
         $class = $this->class;
+
         if (!$value instanceof $class) {
             throw ConversionException::conversionFailed($value, $this->getName());
         }

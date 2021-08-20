@@ -31,7 +31,7 @@ final class EnumTypeTest extends TestCase
     {
         EnumType::register(TestEnum::class, 'test_enum');
 
-        static::assertInstanceOf(EnumType::class, Type::getType('test_enum'));
+        self::assertInstanceOf(EnumType::class, Type::getType('test_enum'));
     }
 
     /**
@@ -41,8 +41,8 @@ final class EnumTypeTest extends TestCase
      */
     public function testConversion(Type $type, Enum $enum, $value): void
     {
-        static::assertSame($value, $type->convertToDatabaseValue($enum, self::$platform));
-        static::assertSame($enum, $type->convertToPHPValue($value, self::$platform));
+        self::assertSame($value, $type->convertToDatabaseValue($enum, self::$platform));
+        self::assertSame($enum, $type->convertToPHPValue($value, self::$platform));
     }
 
     public function conversionDataProvider(): Generator
@@ -59,7 +59,7 @@ final class EnumTypeTest extends TestCase
      */
     public function testDeclaration(EnumType $type, string $declaration): void
     {
-        static::assertSame($declaration, $type->getSQLDeclaration([], self::$platform));
+        self::assertSame($declaration, $type->getSQLDeclaration([], self::$platform));
     }
 
     public function declarationDataProvider(): Generator
@@ -78,14 +78,17 @@ final class EnumTypeTest extends TestCase
     }
 }
 
+/**
+ * @psalm-suppress DeprecatedClass
+ */
 class EnumTestPlatform extends SQLAnywherePlatform
 {
-    public function getVarcharTypeDeclarationSQL(array $field): string
+    public function getVarcharTypeDeclarationSQL(array $column): string
     {
         return 'varchar';
     }
 
-    public function getSmallIntTypeDeclarationSQL(array $columnDef): string
+    public function getSmallIntTypeDeclarationSQL(array $column): string
     {
         return 'smallint';
     }

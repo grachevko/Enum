@@ -1,7 +1,7 @@
 VOLUMES = -v `pwd`:/data -w /data
 
-php = docker run --rm $(OPTIONS) $(VOLUMES) php:7.4.1-alpine
-composer = docker run --rm $(VOLUMES) composer:1.9.1
+php = docker run --rm $(OPTIONS) $(VOLUMES) php:8.0-alpine
+composer = docker run --rm $(VOLUMES) composer:2.1.5
 
 all: install composer-validate php-cs-fixer psalm phpstan phpunit
 

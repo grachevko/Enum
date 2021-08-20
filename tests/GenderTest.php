@@ -15,32 +15,32 @@ class GenderTest extends TestCase
     public function testEnumIsMale(): void
     {
         $male = Gender::male();
-        static::assertTrue($male->isMale());
-        static::assertFalse($male->isFemale());
-        static::assertFalse($male->isUnapplicable());
-        static::assertSame('male', $male->toName());
+        self::assertTrue($male->isMale());
+        self::assertFalse($male->isFemale());
+        self::assertFalse($male->isUnapplicable());
+        self::assertSame('male', $male->toName());
     }
 
     public function testEnumIsFemale(): void
     {
         $female = Gender::female();
-        static::assertTrue($female->isFemale());
-        static::assertFalse($female->isMale());
-        static::assertFalse($female->isUnapplicable());
-        static::assertSame('female', $female->toName());
+        self::assertTrue($female->isFemale());
+        self::assertFalse($female->isMale());
+        self::assertFalse($female->isUnapplicable());
+        self::assertSame('female', $female->toName());
     }
 
     public function testEnumCallStatic(): void
     {
-        static::assertSame(Gender::create(0), Gender::unknown());
-        static::assertSame(Gender::create(1), Gender::male());
-        static::assertSame(Gender::create(2), Gender::female());
-        static::assertSame(Gender::create(9), Gender::unapplicable());
+        self::assertSame(Gender::create(0), Gender::unknown());
+        self::assertSame(Gender::create(1), Gender::male());
+        self::assertSame(Gender::create(2), Gender::female());
+        self::assertSame(Gender::create(9), Gender::unapplicable());
     }
 
     public function testEnumCall(): void
     {
-        static::assertTrue(Gender::male()->isMale());
-        static::assertFalse(Gender::female()->isMale());
+        self::assertTrue(Gender::male()->isMale());
+        self::assertFalse(Gender::female()->isMale());
     }
 }

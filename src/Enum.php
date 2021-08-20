@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Premier\Enum;
 
+use BadMethodCallException;
+use InvalidArgumentException;
+use LogicException;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
+use Serializable;
 use function array_diff;
 use function array_flip;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
 use function array_values;
-use BadMethodCallException;
 use function ctype_upper;
 use function get_class;
 use function in_array;
-use InvalidArgumentException;
 use function is_int;
 use function lcfirst;
-use LogicException;
 use function preg_replace;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
-use Serializable;
 use function sprintf;
 use function strpos;
 use function strtolower;
@@ -73,9 +73,9 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @throws ReflectionException
-     * @throws InvalidArgumentException
      * @throws BadMethodCallException
+     * @throws InvalidArgumentException
+     * @throws ReflectionException
      *
      * @return bool|string
      */
@@ -95,9 +95,9 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @throws ReflectionException
      * @throws BadMethodCallException
      * @throws LogicException
+     * @throws ReflectionException
      *
      * @return static
      */
@@ -123,6 +123,8 @@ abstract class Enum implements Serializable
      * @throws ReflectionException
      *
      * @return static
+     *
+     * @psalm-suppress UnsafeInstantiation
      */
     final public static function create(int $id): self
     {
@@ -161,8 +163,8 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @throws ReflectionException
      * @throws InvalidArgumentException
+     * @throws ReflectionException
      *
      * @return mixed
      */
@@ -242,8 +244,8 @@ abstract class Enum implements Serializable
     }
 
     /**
-     * @throws ReflectionException
      * @throws LogicException
+     * @throws ReflectionException
      */
     private static function getReflection(): ReflectionClass
     {
