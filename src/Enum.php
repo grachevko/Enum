@@ -229,6 +229,16 @@ abstract class Enum implements Serializable
         $this->id = (int) $serialized;
     }
 
+    final public function __serialize(): array
+    {
+        return ['id' => $this->toId()];
+    }
+
+    final public function __unserialize(array $data): void
+    {
+        $this->id = (int) $data['id'];
+    }
+
     /**
      * @throws InvalidArgumentException
      */
